@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 1rem;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+main {
+    padding: 2rem;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.social-links a, .legal-links a {
+    color: #fff;
+    margin: 0 0.5rem;
+    text-decoration: none;
+}
+
+#cookie-notice {
+    background-color: #f1f1f1;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+}
+
+#join-us-popup {
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+#join-us-popup form {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 2rem;
+    width: 300px;
+}
+
+/* Add more specific styles for different pages and components */
