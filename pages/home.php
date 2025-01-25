@@ -146,9 +146,9 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://cdn.pixabay.com/photo/2016/08/09/19/31/vegetables-1584999_640.jpg" 
-                         srcset="https://cdn.pixabay.com/photo/2016/08/09/19/31/vegetables-1584999_640.jpg 640w,
-                                 https://cdn.pixabay.com/photo/2016/08/09/19/31/vegetables-1584999_1280.jpg 1280w"
+                    <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=800" 
+                         srcset="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=800 800w,
+                                 https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=1280 1280w"
                          sizes="(max-width: 768px) 100vw, 33vw"
                          alt="Fresh Vegetables" 
                          class="w-full h-[235px] object-cover transition-transform duration-500 group-hover:scale-105"
