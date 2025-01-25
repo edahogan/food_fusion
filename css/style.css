@@ -53,6 +53,67 @@ footer {
     width: 100%;
 }
 
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 15% auto;
+    padding: 20px;
+    position: relative;
+    width: 300px;
+}
+
+.close-popup {
+    color: #aaa;
+    cursor: pointer;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-popup:hover {
+    color: #333;
+}
+
+#login-form input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#login-form button {
+    background-color: #333;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+}
+
+#login-form button:hover {
+    background-color: #444;
+}
+
+#login-message {
+    margin-top: 10px;
+    text-align: center;
+}
+
 #join-us-popup {
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
@@ -61,13 +122,6 @@ footer {
     position: fixed;
     top: 0;
     width: 100%;
-}
-
-#join-us-popup form {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 2rem;
-    width: 300px;
 }
 
 /* Add more specific styles for different pages and components */

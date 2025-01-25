@@ -55,5 +55,8 @@ switch ($page) {
         break;
 }
 
+// Include modals
+include 'modals.php';
+
 // Include footer
 include 'footer.php';

@@ -1,6 +1,6 @@
 <?php
-// session_start();
-// require_once 'db_connection.php';
+// session_start(); // Removed as it's already called in index.php
+require_once 'db_connection.php';
 
 function registerUser($firstName, $lastName, $email, $password) {
     global $conn;
@@ -27,8 +27,17 @@ function loginUser($email, $password) {
         $user = $result->fetch_assoc();
         
         // Check if account is locked
-        if ($user['LockoutTime'] !== null && strtotime($user['LockoutTime']) > time()) {
-            return "Account is locked. Please try again later.";
+        if ($user['LockoutTime'] !== null) {
+            $lockoutTime = strtotime($user['LockoutTime']);
+            if ($lockoutTime > time()) {
+                $remainingTime = ceil(($lockoutTime - time()) / 60);
+                return "Account is locked. Please try again in {$remainingTime} minute(s).";
+            } else {
+                // Reset lockout if time has expired
+                $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = 0, LockoutTime = NULL WHERE UserID = ?");
+                $stmt->bind_param("i", $user['UserID']);
+                $stmt->execute();
+            }
         }
         
         if (password_verify($password, $user['Password'])) {
@@ -42,16 +51,17 @@ function loginUser($email, $password) {
         } else {
             // Increment failed attempts
             $failedAttempts = $user['FailedAttempts'] + 1;
-            $lockoutTime = ($failedAttempts >= 3) ? date('Y-m-d H:i:s', strtotime('+3 minutes')) : null;
+            $lockoutTime = ($failedAttempts >= 3) ? date('Y-m-d H:i:s', strtotime('+15 minutes')) : null;
             
             $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ?, LockoutTime = ? WHERE UserID = ?");
             $stmt->bind_param("isi", $failedAttempts, $lockoutTime, $user['UserID']);
             $stmt->execute();
             
             if ($failedAttempts >= 3) {
-                return "Account locked for 3 minutes due to multiple failed attempts.";
+                return "Account locked for 15 minutes due to multiple failed attempts.";
             } else {
-                return "Invalid email or password.";
+                $remainingAttempts = 3 - $failedAttempts;
+                return "Invalid password. {$remainingAttempts} attempt(s) remaining before account lockout.";
             }
         }
     } else {
@@ -62,4 +72,38 @@ function loginUser($email, $password) {
 function logoutUser() {
     session_unset();
     session_destroy();
+}
+
+// Add this at the end of the file
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'login') {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        echo loginUser($email, $password);
+        exit;
+    } elseif ($_POST['action'] === 'register') {
+        $firstName = $_POST['firstName'];
+        $lastName = $_POST['lastName'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+        // Check if email already exists
+        $stmt = $conn->prepare("SELECT UserID FROM Users WHERE Email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            echo "Email already registered. Please use a different email.";
+            exit;
+        }
+        
+        if (registerUser($firstName, $lastName, $email, $password)) {
+            // Auto login after successful registration
+            echo loginUser($email, $password);
+        } else {
+            echo "Registration failed. Please try again.";
+        }
+        exit;
+    }
 }
