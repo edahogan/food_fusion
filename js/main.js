@@ -2,6 +2,35 @@ $(document).ready(function() {
     // Initialize Flowbite
     initFlowbite();
 
+    // Parallax scrolling effect
+    window.addEventListener('scroll', function() {
+        const parallaxElements = document.querySelectorAll('[style*="translateZ"]');
+        const scrolled = window.pageYOffset;
+        
+        parallaxElements.forEach(element => {
+            const speed = 0.5;
+            const yPos = -(scrolled * speed);
+            element.style.transform = `translateZ(${element.style.transform.split('translateZ')[1].split(')')[0]}) translateY(${yPos}px)`;
+        });
+    });
+
+    // Add smooth reveal animations on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('motion-safe:animate-fadeIn');
+                entry.target.style.opacity = 1;
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.group').forEach((el) => {
+        el.style.opacity = 0;
+        observer.observe(el);
+    });
+
     // Show signup popup after 3 seconds if user is not logged in and hasn't closed it before
     if (!localStorage.getItem('signupPopupClosed') && !$('body').hasClass('logged-in')) {
         setTimeout(function() {
@@ -278,21 +307,6 @@ $(document).ready(function() {
                 scrollTop: target.offset().top - 80
             }, 500, 'swing');
         }
-    });
-
-    // Add scroll animations for elements
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('motion-safe:animate-fadeIn');
-            }
-        });
-    }, {
-        threshold: 0.1
-    });
-
-    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
-        observer.observe(el);
     });
 
     // Form submissions
