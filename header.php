@@ -69,6 +69,12 @@
                     <a href="index.php?page=community" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Community</a>
                     <a href="index.php?page=resources" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Resources</a>
                     <a href="index.php?page=education" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
+                    <?php else: ?>
+                        <button id="login-button-mobile" class="block w-full text-left px-3 py-2 text-primary-600 hover:text-primary-700 font-medium">Login</button>
+                        <button id="register-button-mobile" class="block w-full text-left px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Register</button>
+                    <?php endif; ?>
                 </div>
             </div>
         </nav>

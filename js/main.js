@@ -30,12 +30,8 @@ $(document).ready(function() {
             const modalId = this.getAttribute('data-modal-hide');
             const modal = document.getElementById(modalId);
             if (modal) {
-                const modalInstance = Modal.getInstance(modal);
-                if (modalInstance) {
-                    modalInstance.hide();
-                } else {
-                    new Modal(modal).hide();
-                }
+                const modalInstance = modals[modalId] || new Modal(modal);
+                modalInstance.hide();
             }
         });
     });
@@ -49,11 +45,8 @@ $(document).ready(function() {
             // Hide current modal
             if (hideModalId) {
                 const currentModal = document.getElementById(hideModalId);
-                if (currentModal) {
-                    const modalInstance = Modal.getInstance(currentModal);
-                    if (modalInstance) {
-                        modalInstance.hide();
-                    }
+                if (currentModal && modals[hideModalId]) {
+                    modals[hideModalId].hide();
                 }
             }
 
@@ -62,7 +55,7 @@ $(document).ready(function() {
                 setTimeout(() => {
                     const newModal = document.getElementById(showModalId);
                     if (newModal) {
-                        const modalInstance = Modal.getInstance(newModal) || new Modal(newModal);
+                        const modalInstance = modals[showModalId] || new Modal(newModal);
                         modalInstance.show();
                     }
                 }, 300);
@@ -71,22 +64,20 @@ $(document).ready(function() {
     });
 
     // Handle login button in header
-    $('#login-button').click(function(e) {
+    $('#login-button, #login-button-mobile').click(function(e) {
         e.preventDefault();
         const loginModal = document.getElementById('login-modal');
         if (loginModal) {
-            const modalInstance = Modal.getInstance(loginModal) || new Modal(loginModal);
-            modalInstance.show();
+            modals.login.show();
         }
     });
 
     // Handle register button in header
-    $('#register-button').click(function(e) {
+    $('#register-button, #register-button-mobile').click(function(e) {
         e.preventDefault();
         const registerModal = document.getElementById('register-modal');
         if (registerModal) {
-            const modalInstance = Modal.getInstance(registerModal) || new Modal(registerModal);
-            modalInstance.show();
+            modals.register.show();
         }
     });
 
@@ -224,7 +215,7 @@ $(document).ready(function() {
         initializeThirdPartyServices();
 
         // Close modal
-        const modal = Modal.getInstance(document.getElementById('cookie-settings-modal'));
+        const modal = new Modal(document.getElementById('cookie-settings-modal'));
         modal.hide();
     });
 
