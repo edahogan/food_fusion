@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
         difficulty: ''
     };
 
+    // Load all recipes by default
+    updateRecipes(filters);
+
     // Handle option selection for all dropdowns
     Object.keys(dropdowns).forEach(type => {
         if (dropdowns[type].options) {

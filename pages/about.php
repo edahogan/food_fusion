@@ -6,9 +6,9 @@ require_once('header.php');
 <!-- Hero Section with Parallax -->
 <section class="relative golden-height overflow-hidden">
     <div class="absolute inset-0">
-        <img src="https://tse2.mm.bing.net/th?id=OIP.vif9IUe5tKjh27zn0ftXFgHaE8&pid=Api" 
+        <img src="https://th.bing.com/th/id/OIG1.K9SxaSY.GjRTARX2QJDa?pid=ImgGn" 
              alt="Chef Plating"
-             class="w-full h-full object-cover"
+             class="w-full h-full object-cover rounded-2xl"
              style="transform: translateZ(-1px) scale(1.5);"
              fetchpriority="high">
         <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
@@ -51,7 +51,7 @@ require_once('header.php');
                 </div>
             </div>
             <!-- Image (Golden Ratio: 0.618) -->
-            <div class="lg:pl-12 opacity-0 translate-y-8 golden-aspect" data-aos="fade-up" data-aos-delay="200">
+            <div class="lg:pl-12 opacity-0 translate-y-8 golden-aspect max-w-md mx-auto" data-aos="fade-up" data-aos-delay="200">
                 <img src="https://tse3.mm.bing.net/th?id=OIP.SEoh2E4RMgBSMB34UHjfwAHaHa&pid=Api"
                      alt="Colorful Food"
                      class="w-full rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500">
@@ -65,7 +65,7 @@ require_once('header.php');
     <div class="absolute inset-0">
         <img src="https://tse2.mm.bing.net/th?id=OIP.Zni-jBodqdDHlrLjjEgTTQHaFE&pid=Api"
              alt="Restaurant Atmosphere"
-             class="w-full h-full object-cover"
+             class="w-full h-full object-cover rounded-2xl"
              style="transform: translateZ(-1px) scale(1.5);"
              loading="lazy">
         <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80"></div>
@@ -149,14 +149,14 @@ require_once('header.php');
 </section>
 
 <!-- Call to Action -->
-<section class="relative golden-height overflow-hidden bg-primary-900">
-    <div class="absolute inset-0 opacity-10">
+<section class="relative golden-height overflow-hidden bg-primary-900 py-32 pb-40">
+    <div class="absolute inset-0 opacity-20">
         <img src="https://tse3.mm.bing.net/th?id=OIP.BsG_5TJXwfJu7spDQS3O_gHaLG&pid=Api"
              alt="Background Pattern"
-             class="w-full h-full object-cover"
+             class="w-full h-full object-cover rounded-2xl"
              style="transform: translateZ(-1px) scale(1.5);">
     </div>
-    <div class="relative container mx-auto px-4 text-center">
+    <div class="relative container mx-auto px-4 text-center py-8">
         <div class="max-w-3xl mx-auto">
             <h2 class="text-4xl font-display font-bold text-white mb-8 opacity-0" data-aos="fade-up">Join Our Culinary Journey</h2>
             <p class="text-xl text-white/90 mb-12 opacity-0" data-aos="fade-up" data-aos-delay="100">

@@ -2,10 +2,7 @@
 <section class="relative h-screen overflow-hidden -mt-24">
     <div class="absolute inset-0">
         <img src="https://images.pexels.com/photos/3298639/pexels-photo-3298639.jpeg?auto=compress&cs=tinysrgb&w=1280" 
-             srcset="https://images.pexels.com/photos/3298639/pexels-photo-3298639.jpeg?auto=compress&cs=tinysrgb&w=800 800w,
-                     https://images.pexels.com/photos/3298639/pexels-photo-3298639.jpeg?auto=compress&cs=tinysrgb&w=1280 1280w,
-                     https://images.pexels.com/photos/3298639/pexels-photo-3298639.jpeg?auto=compress&cs=tinysrgb&w=1920 1920w"
-             sizes="100vw"
+             
              alt="Grilled Salmon Hero" 
              class="w-full h-full object-cover rounded-b-3xl"
              style="transform: translateZ(-1px) scale(2);"

@@ -16,13 +16,26 @@ CREATE TABLE Recipes (
     UserID INT,
     Title VARCHAR(100) NOT NULL,
     Description TEXT,
-    Ingredients TEXT,
-    Instructions TEXT,
-    CuisineType VARCHAR(50),
+    Ingredients JSON NOT NULL,
+    Instructions JSON NOT NULL,
+    Cuisine VARCHAR(50),
     DietaryPreference VARCHAR(50),
-    Difficulty VARCHAR(20),
+    Difficulty ENUM('easy', 'medium', 'hard') NOT NULL,
+    PrepTime INT NOT NULL COMMENT 'Preparation time in minutes',
+    CookTime INT NOT NULL COMMENT 'Cooking time in minutes',
+    TotalTime INT NOT NULL COMMENT 'Total time in minutes',
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Create RecipeImages table
+CREATE TABLE RecipeImages (
+    ImageID INT PRIMARY KEY AUTO_INCREMENT,
+    RecipeID INT NOT NULL,
+    ImageURL VARCHAR(255) NOT NULL,
+    IsPrimary BOOLEAN DEFAULT FALSE,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (RecipeID) REFERENCES Recipes(RecipeID) ON DELETE CASCADE
 );
 
 -- Create Comments table

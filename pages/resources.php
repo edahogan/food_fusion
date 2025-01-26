@@ -149,5 +149,3 @@ require_once dirname(__DIR__) . '/header.php';
         });
     });
 </script>
-
-<?php require_once dirname(__DIR__) . '/footer.php'; ?>
