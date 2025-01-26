@@ -47,6 +47,7 @@
                     <a href="index.php?page=community" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
                     <a href="index.php?page=resources" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
                     <a href="index.php?page=education" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
+                    <a href="index.php?page=contact" class="px-4 py-2 bg-primary-600 text-white rounded-lg shadow-lg hover:bg-primary-700 transform hover:scale-105 transition-all duration-200 font-medium">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="logout.php" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">Logout</a>
                     <?php else: ?>
@@ -69,6 +70,7 @@
                     <a href="index.php?page=community" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Community</a>
                     <a href="index.php?page=resources" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Resources</a>
                     <a href="index.php?page=education" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
+                    <a href="index.php?page=contact" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
                     <?php else: ?>
