@@ -6,6 +6,7 @@
     <title>FoodFusion - <?php echo ucfirst($page); ?></title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="js/main.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,7 +48,7 @@
                     <a href="index.php?page=community" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
                     <a href="index.php?page=resources" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
                     <a href="index.php?page=education" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
-                    <a href="index.php?page=contact" class="px-4 py-2 bg-primary-600 text-white rounded-lg shadow-lg hover:bg-primary-700 transform hover:scale-105 transition-all duration-200 font-medium">Contact Us</a>
+                    <a href="index.php?page=contact" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="logout.php" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">Logout</a>
                     <?php else: ?>

@@ -21,45 +21,60 @@ try {
 
     $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
 
-    // Fetch recipes with their primary images
+    // Updated query to include WHERE clause
     $query = "
         SELECT r.*, 
                u.FirstName, 
                u.LastName,
-               GROUP_CONCAT(DISTINCT 
-                   CASE 
-                       WHEN ri.IsPrimary = 1 THEN ri.ImageURL 
-                       ELSE NULL 
-                   END
-               ) as PrimaryImage,
-               GROUP_CONCAT(DISTINCT 
-                   CASE 
-                       WHEN ri.IsPrimary = 0 THEN ri.ImageURL 
-                       ELSE NULL 
-                   END
-               ) as AdditionalImages
+               ci.ImageURL as PrimaryImage
         FROM Recipes r
         LEFT JOIN Users u ON r.UserID = u.UserID
-        LEFT JOIN RecipeImages ri ON r.RecipeID = ri.RecipeID
-        $whereClause
-        GROUP BY r.RecipeID
+        LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+        AND ci.IsPrimary = 1 
+        AND ci.ContentType = 'recipe'
+        " . $whereClause . "
         ORDER BY r.CreatedAt DESC
     ";
 
     $stmt = $conn->prepare($query);
     
+    // Execute with parameters if there are any
     if (!empty($params)) {
-        $types = str_repeat('s', count($params));
-        $stmt->bind_param($types, ...$params);
+        $stmt->execute($params);
+    } else {
+        $stmt->execute();
     }
     
-    $stmt->execute();
     $result = $stmt->get_result();
     $recipes = $result->fetch_all(MYSQLI_ASSOC);
 
+    // If no recipes found, return a message
+    if (empty($recipes)) {
+        echo '<div class="col-span-full text-center py-12">';
+        echo '<div class="max-w-md mx-auto space-y-4">';
+        echo '<p class="text-2xl font-semibold text-neutral-700">No recipes found</p>';
+        echo '<p class="text-neutral-600">Try adjusting your filters to find more recipes.</p>';
+        echo '<button onclick="resetFilters()" class="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">';
+        echo 'Reset Filters';
+        echo '</button>';
+        echo '</div>';
+        echo '</div>';
+        exit;
+    }
+
+    // More detailed debug output
+    echo "<!-- Total recipes found: " . count($recipes) . " -->\n";
+    
     foreach ($recipes as $recipe) {
-        $primaryImage = $recipe['PrimaryImage'] ?? 'https://via.placeholder.com/400x300';
-        $additionalImages = array_filter(explode(',', $recipe['AdditionalImages'] ?? ''));
+        echo "<!-- \n";
+        echo "Recipe ID: " . htmlspecialchars($recipe['RecipeID']) . "\n";
+        echo "Title: " . htmlspecialchars($recipe['Title']) . "\n";
+        echo "Primary Image: " . htmlspecialchars($recipe['PrimaryImage'] ?? 'none') . "\n";
+        echo "-->\n";
+        
+        // Use the primary image from DB or fallback to placeholder
+        $primaryImage = !empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+        $additionalImages = !empty($recipe['AdditionalImages']) ? array_filter(explode(',', $recipe['AdditionalImages'])) : [];
         ?>
         <div class="recipe-card group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">
             <!-- Primary Image -->

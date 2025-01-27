@@ -1,7 +1,7 @@
 <!-- Hero Section with Parallax -->
 <section class="relative h-screen overflow-hidden -mt-24">
     <div class="absolute inset-0">
-        <img src="https://images.pexels.com/photos/3298639/pexels-photo-3298639.jpeg?auto=compress&cs=tinysrgb&w=1280" 
+        <img src="https://th.bing.com/th/id/OIG3.cUTd2t1EBzxaicope80r?w=1024&h=1024&rs=1&pid=ImgDetMain" 
              
              alt="Grilled Salmon Hero" 
              class="w-full h-full object-cover rounded-b-3xl"
@@ -16,6 +16,97 @@
             <a href="#featured-recipes" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
                 Explore Recipes
             </a>
+        </div>
+    </div>
+</section>
+
+<!-- Events Carousel Section -->
+<section class="py-24 bg-white overflow-hidden">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-display font-bold text-neutral-900 mb-12 text-center">Upcoming Events</h2>
+        
+        <!-- Flowbite Carousel -->
+        <div id="events-carousel" class="relative w-full" data-carousel="slide">
+            <!-- Carousel wrapper -->
+            <div class="relative h-[28rem] overflow-hidden rounded-xl">
+                <!-- Event 1 -->
+                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                    <div class="absolute block w-full h-full">
+                        <img src="https://th.bing.com/th/id/OIG3.11.YVWBZcnlUpicF3H6G" 
+                             class="absolute block w-full h-full object-cover"
+                             alt="Artisanal Bread Making Workshop">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                            <span class="px-3 py-1 text-sm font-medium bg-primary-100 text-primary-700 rounded-full">March 15, 2024</span>
+                            <h3 class="text-2xl font-bold mt-4 mb-2">Artisanal Bread Making Workshop</h3>
+                            <p class="text-white/90 mb-4">Master the art of bread making with our expert bakers. Learn to create crusty sourdough, fluffy brioche, and rustic country loaves.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-white/80">Culinary Institute Kitchen Lab A</span>
+                                <button class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Event 2 -->
+                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                    <div class="absolute block w-full h-full">
+                        <img src="https://th.bing.com/th/id/OIG3.YxWwtgFegge_6_QG9hgR" 
+                             class="absolute block w-full h-full object-cover"
+                             alt="Farm-to-Table Cooking Experience">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                            <span class="px-3 py-1 text-sm font-medium bg-primary-100 text-primary-700 rounded-full">March 20, 2024</span>
+                            <h3 class="text-2xl font-bold mt-4 mb-2">Farm-to-Table Cooking Experience</h3>
+                            <p class="text-white/90 mb-4">Join us for a unique experience where you'll harvest fresh ingredients from our partner farm and learn to transform them into delicious seasonal dishes.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-white/80">Green Meadows Farm & Kitchen</span>
+                                <button class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Event 3 -->
+                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                    <div class="absolute block w-full h-full">
+                        <img src="https://th.bing.com/th/id/OIG1.gWeZLtdAYDaVmUjMn3Z4" 
+                             class="absolute block w-full h-full object-cover"
+                             alt="Asian Fusion Masterclass">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                            <span class="px-3 py-1 text-sm font-medium bg-primary-100 text-primary-700 rounded-full">March 25, 2024</span>
+                            <h3 class="text-2xl font-bold mt-4 mb-2">Asian Fusion Masterclass</h3>
+                            <p class="text-white/90 mb-4">Explore the exciting world of Asian fusion cuisine. Learn to combine traditional Asian flavors with modern cooking techniques.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-white/80">Asian Fusion Culinary Center</span>
+                                <button class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slider controls -->
+            <button type="button" class="absolute top-1/2 left-4 z-30 flex items-center justify-center h-10 w-10 rounded-full bg-white/30 backdrop-blur-sm hover:bg-white/50 focus:outline-none group" data-carousel-prev>
+                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                </svg>
+            </button>
+            <button type="button" class="absolute top-1/2 right-4 z-30 flex items-center justify-center h-10 w-10 rounded-full bg-white/30 backdrop-blur-sm hover:bg-white/50 focus:outline-none group" data-carousel-next>
+                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                </svg>
+            </button>
+            <!-- Slider indicators -->
+            <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
+                <button type="button" class="w-3 h-3 rounded-full bg-white/50" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
+                <button type="button" class="w-3 h-3 rounded-full bg-white/50" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
+                <button type="button" class="w-3 h-3 rounded-full bg-white/50" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
+            </div>
         </div>
     </div>
 </section>

@@ -67,3 +67,20 @@ CREATE TABLE Resources (
     ResourceType ENUM('Recipe Card', 'Tutorial', 'Video', 'Infographic') NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE cooking_events (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_date TIMESTAMP NOT NULL,
+    image_url VARCHAR(512),
+    spots_available INTEGER,
+    price DECIMAL(10,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Add some sample data
+INSERT INTO cooking_events (title, description, event_date, image_url, spots_available, price) VALUES
+    ('Italian Pasta Masterclass', 'Learn the art of handmade pasta from our expert chefs', '2024-04-15 18:00:00', '/images/events/pasta-class.jpg', 12, 89.99),
+    ('Sushi Rolling Workshop', 'Master the techniques of rolling perfect sushi', '2024-04-20 19:00:00', '/images/events/sushi-class.jpg', 8, 99.99),
+    ('French Pastry Basics', 'Discover the secrets of French pastry making', '2024-04-25 17:30:00', '/images/events/pastry-class.jpg', 10, 79.99);

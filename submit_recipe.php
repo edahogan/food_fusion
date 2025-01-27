@@ -70,8 +70,8 @@ try {
         }
 
         $imageStmt = $conn->prepare("
-            INSERT INTO RecipeImages (RecipeID, ImageURL, IsPrimary)
-            VALUES (:recipe_id, :image_url, :is_primary)
+            INSERT INTO ContentImages (RecipeID, ImageURL, ContentType, IsPrimary)
+            VALUES (:recipe_id, :image_url, 'recipe', :is_primary)
         ");
 
         foreach ($_FILES['recipe_images']['tmp_name'] as $key => $tmp_name) {

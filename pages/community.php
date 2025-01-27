@@ -26,24 +26,27 @@
         
         <select name="cuisine-type" required class="w-full px-4 py-2 border rounded-lg">
             <option value="">Select Cuisine Type</option>
-            <option value="italian">Italian</option>
-            <option value="mexican">Mexican</option>
-            <option value="asian">Asian</option>
-            <option value="mediterranean">Mediterranean</option>
-            <option value="american">American</option>
-            <option value="indian">Indian</option>
-            <option value="french">French</option>
-            <option value="other">Other</option>
+            <option value="American">American</option>
+            <option value="Italian">Italian</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Asian">Asian</option>
+            <option value="Mediterranean">Mediterranean</option>
+            <option value="French">French</option>
+            <option value="Spanish">Spanish</option>
+            <option value="Greek">Greek</option>
+            <option value="Japanese">Japanese</option>
+            <option value="International">International</option>
         </select>
         
         <select name="dietary-preference" required class="w-full px-4 py-2 border rounded-lg">
             <option value="">Select Dietary Preference</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-            <option value="gluten-free">Gluten Free</option>
-            <option value="keto">Keto</option>
-            <option value="paleo">Paleo</option>
-            <option value="none">None</option>
+            <option value="None">None</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Pescatarian">Pescatarian</option>
+            <option value="Gluten-Free">Gluten-Free</option>
+            <option value="Dairy-Free">Dairy-Free</option>
+            <option value="Keto">Keto</option>
         </select>
         
         <select name="difficulty" required class="w-full px-4 py-2 border rounded-lg">

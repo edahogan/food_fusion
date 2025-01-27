@@ -35,7 +35,7 @@ INSERT INTO Recipes (UserID, Title, Description, Ingredients, Instructions, Cuis
 '["Wash and chop all vegetables", "Toss with olive oil", "Season with salt and pepper", "Arrange on serving platter"]',
 'Mediterranean', 'Vegan', 'easy', 15, 0, 15),
 
-(2, 'Gourmet Pasta Dish', 'A delicious pasta dish topped with grated cheese and fresh herbs',
+(2, 'Carbonara', 'A delicious pasta dish topped with grated cheese and fresh herbs',
 '["1 lb pasta", "2 cups marinara sauce", "1 cup grated parmesan", "Fresh basil", "Olive oil"]',
 '["Cook pasta al dente", "Heat marinara sauce", "Combine pasta and sauce", "Top with cheese and herbs"]',
 'Italian', 'Vegetarian', 'medium', 10, 20, 30),
@@ -165,34 +165,50 @@ INSERT INTO Recipes (UserID, Title, Description, Ingredients, Instructions, Cuis
 '["Bake crust", "Make custard", "Arrange fruits", "Glaze", "Chill before serving"]',
 'French', 'Vegetarian', 'hard', 40, 25, 65);
 
--- Insert recipe images
-INSERT INTO RecipeImages (RecipeID, ImageURL, IsPrimary) VALUES
-(1, 'https://www.pexels.com/photo/variety-of-vegetables-on-brown-wooden-surface-1435904/', TRUE),
-(2, 'https://unsplash.com/photos/4_jhDO54BYg', TRUE),
-(3, 'https://www.pexels.com/photo/assorted-sushi-on-black-plate-3577568/', TRUE),
-(4, 'https://unsplash.com/photos/8npZlBR6v8I', TRUE),
-(5, 'https://www.pexels.com/photo/close-up-photo-of-breakfast-bowl-704569/', TRUE),
-(6, 'https://unsplash.com/photos/ekP9R60z9jI', TRUE),
-(7, 'https://www.pexels.com/photo/assorted-flavor-macarons-1028714/', TRUE),
-(8, 'https://unsplash.com/photos/DEuob2v77wI', TRUE),
-(9, 'https://www.pexels.com/photo/fruit-salad-in-glass-bowl-1132047/', TRUE),
-(10, 'https://unsplash.com/photos/8manzosDSGM', TRUE),
-(11, 'https://www.pexels.com/photo/burger-and-fries-on-brown-wooden-board-1639565/', TRUE),
-(12, 'https://unsplash.com/photos/IGfIGP5ONV0', TRUE),
-(13, 'https://www.pexels.com/photo/seafood-paella-461326/', TRUE),
-(14, 'https://unsplash.com/photos/9QzZSHmOAMY', TRUE),
-(15, 'https://www.pexels.com/photo/caprese-salad-on-plate-1279330/', TRUE),
-(16, 'https://unsplash.com/photos/8l8Yl2ruUsg', TRUE),
-(17, 'https://www.pexels.com/photo/assorted-sushi-rolls-3577567/', TRUE),
-(18, 'https://unsplash.com/photos/4qSb_FWhHKs', TRUE),
-(19, 'https://www.pexels.com/photo/baked-bread-food-461060/', TRUE),
-(20, 'https://unsplash.com/photos/IGfIGP5ONV0', TRUE),
-(21, 'https://www.pexels.com/photo/blueberry-muffins-704569/', TRUE),
-(22, 'https://unsplash.com/photos/DEuob2v77wI', TRUE),
-(23, 'https://www.pexels.com/photo/chocolate-fondue-1132047/', TRUE),
-(24, 'https://unsplash.com/photos/8manzosDSGM', TRUE),
-(25, 'https://www.pexels.com/photo/lemon-meringue-pie-1639565/', TRUE),
-(26, 'https://unsplash.com/photos/IGfIGP5ONV0', TRUE),
-(27, 'https://www.pexels.com/photo/fruit-tart-461060/', TRUE);
+-- Insert recipe images from recipe_data_insert.sql into ContentImages table
+INSERT INTO ContentImages (RecipeID, ImageURL, IsPrimary, ContentType) VALUES
+(1, 'https://th.bing.com/th/id/OIG4.ea7Smeqv0qJ6xNTdcPPW', 1, 'recipe'),
+(2, 'https://th.bing.com/th/id/OIG1.TB9cPLe_FqN7PMpXPybM', 1, 'recipe'),
+(3, 'https://th.bing.com/th/id/OIG2.OaS0Fm0vt7WcUl.iog9i', 1, 'recipe'),
+(4, 'https://th.bing.com/th/id/OIG1.a2WhwS.khOoD2U1W1eqt', 1, 'recipe'),
+(5, 'https://th.bing.com/th/id/OIG2.VsJdye_NzoHbds7alXC2', 1, 'recipe'),
+(6, 'https://th.bing.com/th/id/OIG1.Cu91I1KmaSPjChhRrRkG', 1, 'recipe'),
+(7, 'https://th.bing.com/th/id/OIG1.LcB6ABwBagzz6pfaFHgt', 1, 'recipe'),
+(8, 'https://th.bing.com/th/id/OIG1.Tg92q2.2Z3LcKR0ZwtoX', 1, 'recipe'),
+(9, 'https://th.bing.com/th/id/OIG2.b.0qZvkUjACzlTBUxhdL', 1, 'recipe'),
+(10, 'https://th.bing.com/th/id/OIG2.28RR7SQ4.5kLqL83U3NA', 1, 'recipe'),
+(11, 'https://th.bing.com/th/id/OIG4.HL7jjnZipyBG41THliVL', 1, 'recipe'),
+(12, 'https://th.bing.com/th/id/OIG4.zC8SUC.Y8mYzvUzX89O4', 1, 'recipe'),
+(13, 'https://th.bing.com/th/id/OIG3.Y0ZhS2KkO8lLOzzhi4Av', 1, 'recipe'),
+(14, 'https://th.bing.com/th/id/OIG4.YAgSSWIl293pIoc6Vx5_', 1, 'recipe'),
+(15, 'https://th.bing.com/th/id/OIG3.WEhEShuAIOgCCsEz.Ern', 1, 'recipe'),
+(16, 'https://th.bing.com/th/id/OIG3.AMaevyayD8.XiO0XekVP', 1, 'recipe'),
+(17, 'https://th.bing.com/th/id/OIG2.J9KxNy_SeVfF2BTsIp_R', 1, 'recipe'),
+(18, 'https://th.bing.com/th/id/OIG4.tJfrCmEX.QbaBfu08tec', 1, 'recipe'),
+(19, 'https://th.bing.com/th/id/OIG4.xzK9HTzWmZX1eMmagDav', 1, 'recipe'),
+(20, 'https://th.bing.com/th/id/OIG3.qLRbGvIxKVA_4AMCVLKl', 1, 'recipe'),
+(21, 'https://th.bing.com/th/id/OIG3.mLRCJHGgz9xaxl5c1GjK', 1, 'recipe'),
+(22, 'https://th.bing.com/th/id/OIG4.wnreLIHAoP6koup_YylK', 1, 'recipe'),
+(23, 'https://th.bing.com/th/id/OIG1.agPX.Ws4bjsArMz0uyN.', 1, 'recipe'),
+(24, 'https://th.bing.com/th/id/OIG2.i3Y5j87Ek4.X9V7MskNb', 1, 'recipe'),
+(25, 'https://th.bing.com/th/id/OIG2.0dTtTiJ94EHrlQOwI46T', 1, 'recipe'),
+(26, 'https://th.bing.com/th/id/OIG2.AayXwbNboQy15ZULew6z', 1, 'recipe'),
+(27, 'https://th.bing.com/th/id/OIG3.qo7HcTP5ERZ8c4Y5wVun', 1, 'recipe');
 
--- Continue with more image inserts... 
+-- Update recipe inserts to use valid enum values
+UPDATE Recipes SET 
+    Cuisine = 'International' 
+WHERE Cuisine NOT IN ('American', 'Italian', 'Mexican', 'Asian', 'Mediterranean', 'French', 'Spanish', 'Greek', 'Japanese', 'International');
+
+UPDATE Recipes SET 
+    DietaryPreference = 'None' 
+WHERE DietaryPreference NOT IN ('None', 'Vegetarian', 'Vegan', 'Pescatarian', 'Gluten-Free', 'Dairy-Free', 'Keto');
+
+-- For future inserts, ensure values match the enums
+-- Example update for specific recipes:
+UPDATE Recipes SET Cuisine = 'Mediterranean' WHERE Title = 'Fresh Vegetable Medley';
+UPDATE Recipes SET Cuisine = 'Italian' WHERE Title LIKE '%Pasta%';
+UPDATE Recipes SET Cuisine = 'Japanese' WHERE Title LIKE '%Sushi%';
+UPDATE Recipes SET Cuisine = 'American' WHERE Title IN ('Decadent Chocolate Cake', 'Stack of Pancakes', 'Chocolate Chip Cookies');
+UPDATE Recipes SET Cuisine = 'French' WHERE Title IN ('Colorful Macarons', 'Freshly Baked Croissants');
+UPDATE Recipes SET Cuisine = 'Greek' WHERE Title = 'Greek Salad'; 

@@ -15,19 +15,19 @@ try {
                u.LastName,
                GROUP_CONCAT(
                    CASE 
-                       WHEN ri.IsPrimary = 1 THEN ri.ImageURL 
+                       WHEN ci.IsPrimary = 1 AND ci.ContentType = 'recipe' THEN ci.ImageURL 
                        ELSE NULL 
                    END
                ) as PrimaryImage,
                GROUP_CONCAT(
                    CASE 
-                       WHEN ri.IsPrimary = 0 THEN ri.ImageURL 
+                       WHEN ci.IsPrimary = 0 AND ci.ContentType = 'recipe' THEN ci.ImageURL 
                        ELSE NULL 
                    END
                ) as AdditionalImages
         FROM Recipes r
         LEFT JOIN Users u ON r.UserID = u.UserID
-        LEFT JOIN RecipeImages ri ON r.RecipeID = ri.RecipeID
+        LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID
         WHERE r.RecipeID = :recipe_id
         GROUP BY r.RecipeID
     ";

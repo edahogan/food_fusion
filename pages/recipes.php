@@ -15,16 +15,34 @@
                     <button type="button" data-value="" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">All Cuisines</button>
                 </li>
                 <li>
-                    <button type="button" data-value="italian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Italian</button>
+                    <button type="button" data-value="American" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">American</button>
                 </li>
                 <li>
-                    <button type="button" data-value="mexican" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Mexican</button>
+                    <button type="button" data-value="Italian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Italian</button>
                 </li>
                 <li>
-                    <button type="button" data-value="asian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Asian</button>
+                    <button type="button" data-value="Mexican" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Mexican</button>
                 </li>
                 <li>
-                    <button type="button" data-value="mediterranean" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Mediterranean</button>
+                    <button type="button" data-value="Asian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Asian</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Mediterranean" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Mediterranean</button>
+                </li>
+                <li>
+                    <button type="button" data-value="French" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">French</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Spanish" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Spanish</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Greek" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Greek</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Japanese" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Japanese</button>
+                </li>
+                <li>
+                    <button type="button" data-value="International" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">International</button>
                 </li>
             </ul>
         </div>
@@ -44,16 +62,25 @@
                     <button type="button" data-value="" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">All Diets</button>
                 </li>
                 <li>
-                    <button type="button" data-value="vegetarian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Vegetarian</button>
+                    <button type="button" data-value="None" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">None</button>
                 </li>
                 <li>
-                    <button type="button" data-value="vegan" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Vegan</button>
+                    <button type="button" data-value="Vegetarian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Vegetarian</button>
                 </li>
                 <li>
-                    <button type="button" data-value="gluten-free" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Gluten Free</button>
+                    <button type="button" data-value="Vegan" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Vegan</button>
                 </li>
                 <li>
-                    <button type="button" data-value="keto" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Keto</button>
+                    <button type="button" data-value="Pescatarian" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Pescatarian</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Gluten-Free" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Gluten-Free</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Dairy-Free" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Dairy-Free</button>
+                </li>
+                <li>
+                    <button type="button" data-value="Keto" class="w-full px-4 py-2 hover:bg-neutral-100 text-left">Keto</button>
                 </li>
             </ul>
         </div>
@@ -90,7 +117,74 @@
     <!-- Recipe cards will be loaded here -->
 </div>
 
+<!-- No results message (hidden by default) -->
+<div id="no-results-message" class="col-span-full text-center py-12" style="display: none;">
+    <div class="max-w-md mx-auto space-y-4">
+        <p class="text-2xl font-semibold text-neutral-700">No recipes found</p>
+        <p class="text-neutral-600">Try adjusting your filters to find more recipes.</p>
+        <button onclick="resetFilters()" class="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors" data-reset-filters>
+            Reset Filters
+        </button>
+    </div>
+</div>
+
 <script>
+// Initialize filters object in global scope
+const filters = {
+    cuisine: '',
+    diet: '',
+    difficulty: ''
+};
+
+// Function to update recipes
+function updateRecipes() {
+    const recipeList = document.getElementById('recipe-list');
+    recipeList.classList.add('opacity-50');
+
+    // Build query string from filters
+    const queryString = Object.entries(filters)
+        .filter(([_, value]) => value)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join('&');
+
+    // Fetch filtered recipes
+    fetch(`fetch_recipes.php${queryString ? '?' + queryString : ''}`)
+        .then(response => response.text())
+        .then(html => {
+            recipeList.innerHTML = html;
+            recipeList.classList.remove('opacity-50');
+            // Show/hide no results message based on content
+            const noResultsMessage = document.getElementById('no-results-message');
+            if (html.includes('No recipes found')) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching recipes:', error);
+            recipeList.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">Error loading recipes. Please try again.</div>';
+            recipeList.classList.remove('opacity-50');
+            document.getElementById('no-results-message').style.display = 'none';
+        });
+}
+
+// Function to reset filters
+function resetFilters() {
+    // Reset dropdown button texts
+    document.querySelector('#cuisine-dropdown span').textContent = 'All Cuisines';
+    document.querySelector('#diet-dropdown span').textContent = 'All Diets';
+    document.querySelector('#difficulty-dropdown span').textContent = 'All Difficulties';
+    
+    // Reset filter values
+    filters.cuisine = '';
+    filters.diet = '';
+    filters.difficulty = '';
+    
+    // Update recipes with reset filters
+    updateRecipes();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Handle dropdown selections
     const dropdowns = {
@@ -99,47 +193,28 @@ document.addEventListener('DOMContentLoaded', function() {
         difficulty: { button: document.getElementById('difficulty-dropdown'), options: document.getElementById('difficulty-options') }
     };
 
-    // Initialize filters object
-    const filters = {
-        cuisine: '',
-        diet: '',
-        difficulty: ''
-    };
-
-    // Load all recipes by default
-    updateRecipes(filters);
-
     // Handle option selection for all dropdowns
     Object.keys(dropdowns).forEach(type => {
         if (dropdowns[type].options) {
             dropdowns[type].options.querySelectorAll('button').forEach(button => {
                 button.addEventListener('click', function() {
                     const value = this.getAttribute('data-value');
-                    filters[type] = value;
-                    dropdowns[type].button.querySelector('span').textContent = 
-                        value ? this.textContent : `All ${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+                    const text = this.textContent;
                     
-                    // Update recipes
-                    updateRecipes(filters);
+                    // Update button text
+                    dropdowns[type].button.querySelector('span').textContent = text;
+                    
+                    // Update filters
+                    filters[type] = value;
+                    
+                    // Update recipes with new filters
+                    updateRecipes();
                 });
             });
         }
     });
 
-    // Function to update recipes
-    function updateRecipes(filters) {
-        $('#recipe-list').addClass('opacity-50 transition-opacity duration-300');
-        
-        $.ajax({
-            url: 'fetch_recipes.php',
-            method: 'GET',
-            data: filters,
-            success: function(response) {
-                setTimeout(function() {
-                    $('#recipe-list').html(response).removeClass('opacity-50');
-                }, 300);
-            }
-        });
-    }
+    // Load all recipes by default
+    updateRecipes();
 });
 </script>
