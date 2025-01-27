@@ -19,11 +19,15 @@ try {
     // Get PDO connection
     $pdo = getConnection();
     
-    // Use prepared statement
+    // Update query to include primary image from ContentImages
     $query = "
-        SELECT r.*, u.FirstName, u.LastName
+        SELECT r.*, u.FirstName, u.LastName,
+               COALESCE(ci.ImageURL, r.ImageURL) as PrimaryImage
         FROM Recipes r
         LEFT JOIN Users u ON r.UserID = u.UserID
+        LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+            AND ci.ContentType = 'recipe' 
+            AND ci.IsPrimary = 1
         WHERE r.RecipeID = :recipe_id
     ";
     
@@ -40,8 +44,8 @@ try {
     // For debugging - output before the HTML
     echo "<!-- Debug: Recipe found -->";
     
-    // Set a default image if none exists
-    $primaryImage = $recipe['ImageURL'] ?? 'https://via.placeholder.com/800x600';
+    // Update image handling to use PrimaryImage
+    $primaryImage = $recipe['PrimaryImage'] ?? 'https://via.placeholder.com/800x600';
     ?>
 
     <div class="container mx-auto px-4 py-8">
