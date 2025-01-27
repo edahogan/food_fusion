@@ -129,17 +129,6 @@
     <!-- Recipe cards will be loaded here -->
 </div>
 
-<!-- No results message (hidden by default) -->
-<div id="no-results-message" class="col-span-full text-center py-12" style="display: none;">
-    <div class="max-w-md mx-auto space-y-4">
-        <p class="text-2xl font-semibold text-neutral-700">No recipes found</p>
-        <p class="text-neutral-600">Try adjusting your filters to find more recipes.</p>
-        <button onclick="resetFilters()" class="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors" data-reset-filters>
-            Reset Filters
-        </button>
-    </div>
-</div>
-
 <script>
 // Initialize filters object in global scope
 const filters = {
@@ -153,9 +142,8 @@ function updateRecipes() {
     const recipeList = document.getElementById('recipe-list');
     recipeList.classList.add('opacity-50');
 
-    // Build query string from filters
     const queryString = Object.entries(filters)
-        .filter(([_, value]) => value)
+        .filter(([_, value]) => value !== '')
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
         .join('&');
 
@@ -165,19 +153,11 @@ function updateRecipes() {
         .then(html => {
             recipeList.innerHTML = html;
             recipeList.classList.remove('opacity-50');
-            // Show/hide no results message based on content
-            const noResultsMessage = document.getElementById('no-results-message');
-            if (html.includes('No recipes found')) {
-                noResultsMessage.style.display = 'block';
-            } else {
-                noResultsMessage.style.display = 'none';
-            }
         })
         .catch(error => {
             console.error('Error fetching recipes:', error);
-            recipeList.innerHTML = '<div class="col-span-full text-center py-12 text-red-600">Error loading recipes. Please try again.</div>';
+            recipeList.innerHTML = '';
             recipeList.classList.remove('opacity-50');
-            document.getElementById('no-results-message').style.display = 'none';
         });
 }
 

@@ -2,26 +2,26 @@
 require_once 'db_connection.php';
 
 try {
+    $pdo = getConnection();
     $where = [];
     $params = [];
 
     // Add filters if provided
     if (!empty($_GET['cuisine'])) {
-        $where[] = "r.Cuisine = ?";
-        $params[] = $_GET['cuisine'];
+        $where[] = "r.Cuisine = :cuisine";
+        $params['cuisine'] = $_GET['cuisine'];
     }
     if (!empty($_GET['diet'])) {
-        $where[] = "r.DietaryPreference = ?";
-        $params[] = $_GET['diet'];
+        $where[] = "r.DietaryPreference = :diet";
+        $params['diet'] = $_GET['diet'];
     }
     if (!empty($_GET['difficulty'])) {
-        $where[] = "r.Difficulty = ?";
-        $params[] = $_GET['difficulty'];
+        $where[] = "r.Difficulty = :difficulty";
+        $params['difficulty'] = $_GET['difficulty'];
     }
 
     $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
 
-    // Updated query to include WHERE clause
     $query = "
         SELECT r.*, 
                u.FirstName, 
@@ -36,17 +36,9 @@ try {
         ORDER BY r.CreatedAt DESC
     ";
 
-    $stmt = $conn->prepare($query);
-    
-    // Execute with parameters if there are any
-    if (!empty($params)) {
-        $stmt->execute($params);
-    } else {
-        $stmt->execute();
-    }
-    
-    $result = $stmt->get_result();
-    $recipes = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // If no recipes found, return a message
     if (empty($recipes)) {

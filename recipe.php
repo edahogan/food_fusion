@@ -19,29 +19,21 @@ try {
     // Sanitize the recipe ID
     $recipe_id = mysqli_real_escape_string($conn, $_GET['id']);
 
-    // Simplified query first to test basic connectivity
+    // Replace the mysqli query with PDO
+    $pdo = getConnection();
+    
+    // Use prepared statement
     $query = "
         SELECT r.*, u.FirstName, u.LastName
         FROM Recipes r
         LEFT JOIN Users u ON r.UserID = u.UserID
-        WHERE r.RecipeID = '$recipe_id'
+        WHERE r.RecipeID = :recipe_id
     ";
-
-    // Execute query
-    $result = mysqli_query($conn, $query);
     
-    if (!$result) {
-        throw new Exception("Query failed: " . mysqli_error($conn));
-    }
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['recipe_id' => $_GET['id']]);
+    $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Debug log
-    error_log("Query executed");
-    
-    $recipe = mysqli_fetch_assoc($result);
-
-    // Debug log
-    error_log("Recipe data: " . print_r($recipe, true));
-
     if (!$recipe) {
         error_log("No recipe found for ID: " . $_GET['id']);
         header('Location: pages/recipes.php');

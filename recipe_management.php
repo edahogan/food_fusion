@@ -65,64 +65,70 @@ try {
     // Check if this is an update or new recipe
     if (isset($_POST['recipe_id'])) {
         // Update existing recipe
-        $stmt = $conn->prepare("
+        $stmt = $pdo->prepare("
             UPDATE Recipes 
-            SET Title = ?, Description = ?, Ingredients = ?, Instructions = ?,
-                Cuisine = ?, DietaryPreference = ?, Difficulty = ?,
-                PrepTime = ?, CookTime = ?, TotalTime = ?, ImageURL = ?
-            WHERE RecipeID = ? AND UserID = ?
+            SET Title = :title, 
+                Description = :description, 
+                Ingredients = :ingredients, 
+                Instructions = :instructions,
+                Cuisine = :cuisine, 
+                DietaryPreference = :dietary_preference, 
+                Difficulty = :difficulty,
+                PrepTime = :prep_time, 
+                CookTime = :cook_time, 
+                TotalTime = :total_time, 
+                ImageURL = :image_url
+            WHERE RecipeID = :recipe_id AND UserID = :user_id
         ");
         
-        $recipe_id = $_POST['recipe_id'];
-        $stmt->bind_param(
-            "sssssssiiisii",
-            $recipeData['title'],
-            $recipeData['description'],
-            $recipeData['ingredients'],
-            $recipeData['instructions'],
-            $recipeData['cuisine'],
-            $recipeData['dietary_preference'],
-            $recipeData['difficulty'],
-            $recipeData['prep_time'],
-            $recipeData['cook_time'],
-            $recipeData['total_time'],
-            $recipeData['image_url'],
-            $recipe_id,
-            $recipeData['user_id']
-        );
-        
-        $stmt->execute();
+        $stmt->execute([
+            'title' => $recipeData['title'],
+            'description' => $recipeData['description'],
+            'ingredients' => $recipeData['ingredients'],
+            'instructions' => $recipeData['instructions'],
+            'cuisine' => $recipeData['cuisine'],
+            'dietary_preference' => $recipeData['dietary_preference'],
+            'difficulty' => $recipeData['difficulty'],
+            'prep_time' => $recipeData['prep_time'],
+            'cook_time' => $recipeData['cook_time'],
+            'total_time' => $recipeData['total_time'],
+            'image_url' => $recipeData['image_url'],
+            'recipe_id' => $_POST['recipe_id'],
+            'user_id' => $recipeData['user_id']
+        ]);
     } else {
         // Create new recipe
-        $stmt = $conn->prepare("
+        $stmt = $pdo->prepare("
             INSERT INTO Recipes (
                 UserID, Title, Description, Ingredients, Instructions,
                 Cuisine, DietaryPreference, Difficulty,
                 PrepTime, CookTime, TotalTime, ImageURL
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (
+                :user_id, :title, :description, :ingredients, :instructions,
+                :cuisine, :dietary_preference, :difficulty,
+                :prep_time, :cook_time, :total_time, :image_url
+            )
         ");
         
-        $stmt->bind_param(
-            "isssssssiiis",
-            $recipeData['user_id'],
-            $recipeData['title'],
-            $recipeData['description'],
-            $recipeData['ingredients'],
-            $recipeData['instructions'],
-            $recipeData['cuisine'],
-            $recipeData['dietary_preference'],
-            $recipeData['difficulty'],
-            $recipeData['prep_time'],
-            $recipeData['cook_time'],
-            $recipeData['total_time'],
-            $recipeData['image_url']
-        );
+        $stmt->execute([
+            'user_id' => $recipeData['user_id'],
+            'title' => $recipeData['title'],
+            'description' => $recipeData['description'],
+            'ingredients' => $recipeData['ingredients'],
+            'instructions' => $recipeData['instructions'],
+            'cuisine' => $recipeData['cuisine'],
+            'dietary_preference' => $recipeData['dietary_preference'],
+            'difficulty' => $recipeData['difficulty'],
+            'prep_time' => $recipeData['prep_time'],
+            'cook_time' => $recipeData['cook_time'],
+            'total_time' => $recipeData['total_time'],
+            'image_url' => $recipeData['image_url']
+        ]);
         
-        $stmt->execute();
-        $recipe_id = $conn->insert_id;
+        $recipe_id = $pdo->lastInsertId();
     }
 
-    if ($stmt->affected_rows > 0) {
+    if ($stmt->rowCount() > 0) {
         $response = ['success' => true, 'recipe_id' => $recipe_id];
         error_log("Success response: " . json_encode($response));
         echo json_encode($response);

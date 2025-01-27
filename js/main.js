@@ -130,66 +130,70 @@ $(document).ready(function() {
     // Login form submission
     $('#login-form').submit(function(e) {
         e.preventDefault();
+        const email = $('#login-email').val();
+        const password = $('#login-password').val();
         
         $.ajax({
             url: 'auth.php',
             method: 'POST',
             data: {
                 action: 'login',
-                email: $('#login-email').val(),
-                password: $('#login-password').val()
-            },
-            success: function(response) {
-                if (response === 'success') {
-                    // Hide the login modal
-                    const loginModal = document.getElementById('login-modal');
-                    if (loginModal) {
-                        const modal = Modal.getInstance(loginModal);
-                        if (modal) modal.hide();
-                    }
-                    
-                    // Reload the page to update the UI
-                    window.location.reload();
-                } else {
-                    $('#login-message').html(response).addClass('text-red-600');
-                }
-            },
-            error: function() {
-                $('#login-message').html('An error occurred. Please try again.').addClass('text-red-600');
-            }
-        });
-    });
-
-    // Handle registration form submission
-    $('#register-form').submit(function(e) {
-        e.preventDefault();
-        const firstName = $('#firstName').val();
-        const lastName = $('#lastName').val();
-        const email = $('#registerEmail').val();
-        const password = $('#registerPassword').val();
-
-        $.ajax({
-            url: 'auth.php',
-            method: 'POST',
-            data: {
-                action: 'register',
-                firstName: firstName,
-                lastName: lastName,
                 email: email,
                 password: password
             },
+            dataType: 'json',
             success: function(response) {
-                if (response === "success") {
-                    $('#register-message').removeClass('text-red-600').addClass('text-green-600').html('Registration successful! Redirecting...');
+                if (response.status === 'success') {
+                    $('#login-message').removeClass('text-red-600').addClass('text-green-600')
+                        .html('Login successful! Redirecting...');
                     setTimeout(function() {
                         window.location.reload();
                     }, 1000);
                 } else {
-                    $('#register-message').removeClass('text-green-600').addClass('text-red-600').html(response);
+                    $('#login-message').removeClass('text-green-600').addClass('text-red-600')
+                        .html(response.message);
                 }
             },
-            error: function() {
-                $('#register-message').removeClass('text-green-600').addClass('text-red-600').html('An error occurred. Please try again.');
+            error: function(xhr, status, error) {
+                console.error('Login error:', error);
+                $('#login-message').removeClass('text-green-600').addClass('text-red-600')
+                    .html('An error occurred. Please try again.');
+            }
+        });
+    });
+
+    // Handle signup form submission
+    $('#signup-form').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            action: 'register',
+            firstName: $('#signup-form input[name="firstName"]').val(),
+            lastName: $('#signup-form input[name="lastName"]').val(),
+            email: $('#signup-form input[name="email"]').val(),
+            password: $('#signup-form input[name="password"]').val()
+        };
+
+        $.ajax({
+            url: 'auth.php',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Hide the signup popup
+                    $('#join-us-popup').hide();
+                    
+                    // Show success message and redirect to login
+                    alert('Registration successful! Please log in.');
+                    modals.login.show();
+                } else {
+                    alert(response.message || 'Registration failed. Please try again.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration. Please try again.');
             }
         });
     });

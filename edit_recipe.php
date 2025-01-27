@@ -20,14 +20,18 @@ $error = null;
 
 if (isset($_GET['id'])) {
     try {
-        $stmt = $conn->prepare("
+        $pdo = getConnection();
+        $stmt = $pdo->prepare("
             SELECT * FROM Recipes 
-            WHERE RecipeID = ? AND UserID = ?
+            WHERE RecipeID = :id AND UserID = :user_id
         ");
-        $stmt->bind_param("ii", $_GET['id'], $_SESSION['user_id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $recipe = $result->fetch_assoc();
+        
+        $stmt->execute([
+            'id' => $_GET['id'],
+            'user_id' => $_SESSION['user_id']
+        ]);
+        
+        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$recipe) {
             $error = "Recipe not found or unauthorized";
