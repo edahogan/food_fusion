@@ -54,6 +54,11 @@ $page = $_GET['page'] ?? 'home';
                     <a href="index.php?page=community" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
                     <a href="index.php?page=resources" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
                     <a href="index.php?page=education" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
+                    <a href="index.php?page=contact" class="text-neutral-600 hover:text-neutral-900 transition-colors">Contact</a>
+                    
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="profile.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Profile</a>
+                    <?php endif; ?>
                     
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- User Menu Dropdown -->

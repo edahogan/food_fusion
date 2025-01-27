@@ -1,4 +1,10 @@
-<?php if (isset($_SESSION['user_id'])): ?>
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/food_fusion/db_connection.php';
+
+// Initialize the $conn variable
+$conn = getConnection();
+
+if (isset($_SESSION['user_id'])): ?>
 <div class="mb-8">
     <a href="add_recipe.php" 
        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
@@ -10,7 +16,49 @@
 </div>
 <?php endif; ?>
 
-<h1 class="text-4xl font-display font-semibold mb-8">Recipe Collection</h1>
+<?php
+// Check if a specific user ID is provided via the "u" query parameter
+$userIdFilter = isset($_GET['u']) ? intval($_GET['u']) : null;
+
+// Fetch the user's name if filtering by user ID
+$userName = null;
+if ($userIdFilter) {
+    $stmt = $conn->prepare("SELECT FirstName, LastName FROM Users WHERE UserID = :user_id");
+    $stmt->execute(['user_id' => $userIdFilter]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        $userName = htmlspecialchars($user['FirstName'] . ' ' . $user['LastName']);
+    } else {
+        echo "<p class='text-red-500'>User not found.</p>";
+        exit;
+    }
+}
+
+// Modify the query to filter recipes by user ID if "u" is specified
+$whereClause = $userIdFilter ? "WHERE r.UserID = :user_id" : "";
+$query = "
+    SELECT r.*, 
+           u.FirstName, 
+           u.LastName,
+           ci.ImageURL as PrimaryImage
+    FROM Recipes r
+    LEFT JOIN Users u ON r.UserID = u.UserID
+    LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+        AND ci.IsPrimary = 1 
+        AND ci.ContentType = 'recipe'
+    $whereClause
+    ORDER BY r.CreatedAt DESC
+";
+
+$stmt = $conn->prepare($query);
+$params = $userIdFilter ? ['user_id' => $userIdFilter] : [];
+$stmt->execute($params);
+$recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<h1 class="text-4xl font-display font-semibold mb-8">
+    <?= $userIdFilter ? "Recipes by $userName" : "Recipe Collection" ?>
+</h1>
 
 <div id="recipe-filters" class="flex flex-col sm:flex-row gap-4 mb-8">
     <!-- Cuisine Type Dropdown -->
