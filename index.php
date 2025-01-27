@@ -41,6 +41,9 @@ switch ($page) {
     case 'community':
         include 'pages/community.php';
         break;
+    case 'add_recipe':
+        include 'add_recipe.php';
+        break;
     case 'contact':
         include 'pages/contact.php';
         break;

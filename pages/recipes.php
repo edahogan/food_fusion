@@ -1,3 +1,15 @@
+<?php if (isset($_SESSION['user_id'])): ?>
+<div class="mb-8">
+    <a href="add_recipe.php" 
+       class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add New Recipe
+    </a>
+</div>
+<?php endif; ?>
+
 <h1 class="text-4xl font-display font-semibold mb-8">Recipe Collection</h1>
 
 <div id="recipe-filters" class="flex flex-col sm:flex-row gap-4 mb-8">

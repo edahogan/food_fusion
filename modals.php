@@ -57,12 +57,12 @@
                     <h3 class="mb-4 text-2xl font-display font-medium text-neutral-900">Sign in to FoodFusion</h3>
                     <form id="login-form" class="space-y-6" method="post">
                         <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-neutral-900">Email</label>
-                            <input type="email" name="email" id="email" class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" placeholder="name@company.com" required>
+                            <label for="login-email" class="block mb-2 text-sm font-medium text-neutral-900">Email</label>
+                            <input type="email" name="email" id="login-email" class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" placeholder="name@company.com" required>
                         </div>
                         <div>
-                            <label for="password" class="block mb-2 text-sm font-medium text-neutral-900">Password</label>
-                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" required>
+                            <label for="login-password" class="block mb-2 text-sm font-medium text-neutral-900">Password</label>
+                            <input type="password" name="password" id="login-password" placeholder="••••••••" class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" required>
                         </div>
                         <div id="login-message" class="text-sm text-red-600"></div>
                         <button type="submit" name="login" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">Sign in</button>

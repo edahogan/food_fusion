@@ -84,6 +84,19 @@ try {
                 <span>By <?= htmlspecialchars($recipe['FirstName'] . ' ' . $recipe['LastName']) ?></span>
             </div>
 
+            <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] === $recipe['UserID']): ?>
+            <div class="flex gap-4 mb-6">
+                <button onclick="editRecipe(<?= $recipe['RecipeID'] ?>)" 
+                        class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                    Edit Recipe
+                </button>
+                <button onclick="deleteRecipe(<?= $recipe['RecipeID'] ?>)"
+                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                    Delete Recipe
+                </button>
+            </div>
+            <?php endif; ?>
+
             <p class="text-gray-700 mb-8"><?= htmlspecialchars($recipe['Description']) ?></p>
 
             <!-- Time Information -->
@@ -139,6 +152,34 @@ try {
     function updateMainImage(imageUrl) {
         const mainImage = document.getElementById('main-image');
         mainImage.src = imageUrl;
+    }
+
+    function editRecipe(recipeId) {
+        window.location.href = `edit_recipe.php?id=${recipeId}`;
+    }
+
+    function deleteRecipe(recipeId) {
+        if (confirm('Are you sure you want to delete this recipe? This action cannot be undone.')) {
+            fetch('recipe_management.php', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `recipe_id=${recipeId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'pages/recipes.php';
+                } else {
+                    alert('Error deleting recipe: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting recipe. Please try again.');
+            });
+        }
     }
     </script>
 

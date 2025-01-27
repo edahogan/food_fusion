@@ -46,6 +46,11 @@ function loginUser($email, $password) {
             $stmt->bind_param("i", $user['UserID']);
             $stmt->execute();
             
+            // Start session if not already started
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            
             $_SESSION['user_id'] = $user['UserID'];
             return "success";
         } else {
@@ -64,9 +69,8 @@ function loginUser($email, $password) {
                 return "Invalid password. {$remainingAttempts} attempt(s) remaining before account lockout.";
             }
         }
-    } else {
-        return "Invalid email or password.";
     }
+    return "Invalid email or password.";
 }
 
 function logoutUser() {
@@ -77,9 +81,21 @@ function logoutUser() {
 // Add this at the end of the file
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'login') {
+        // Start session if not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Check if already logged in
+        if (isset($_SESSION['user_id'])) {
+            echo "You are already logged in.";
+            exit;
+        }
+        
         $email = $_POST['email'];
         $password = $_POST['password'];
-        echo loginUser($email, $password);
+        $result = loginUser($email, $password);
+        echo $result;
         exit;
     } elseif ($_POST['action'] === 'register') {
         $firstName = $_POST['firstName'];

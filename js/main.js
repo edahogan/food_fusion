@@ -127,32 +127,35 @@ $(document).ready(function() {
         }
     });
 
-    // Handle login form submission
+    // Login form submission
     $('#login-form').submit(function(e) {
         e.preventDefault();
-        const email = $('#email').val();
-        const password = $('#password').val();
-
+        
         $.ajax({
             url: 'auth.php',
             method: 'POST',
             data: {
                 action: 'login',
-                email: email,
-                password: password
+                email: $('#login-email').val(),
+                password: $('#login-password').val()
             },
             success: function(response) {
-                if (response === "success") {
-                    $('#login-message').removeClass('text-red-600').addClass('text-green-600').html('Login successful! Redirecting...');
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
+                if (response === 'success') {
+                    // Hide the login modal
+                    const loginModal = document.getElementById('login-modal');
+                    if (loginModal) {
+                        const modal = Modal.getInstance(loginModal);
+                        if (modal) modal.hide();
+                    }
+                    
+                    // Reload the page to update the UI
+                    window.location.reload();
                 } else {
-                    $('#login-message').removeClass('text-green-600').addClass('text-red-600').html(response);
+                    $('#login-message').html(response).addClass('text-red-600');
                 }
             },
             error: function() {
-                $('#login-message').removeClass('text-green-600').addClass('text-red-600').html('An error occurred. Please try again.');
+                $('#login-message').html('An error occurred. Please try again.').addClass('text-red-600');
             }
         });
     });
