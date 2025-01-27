@@ -104,43 +104,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to load posts
 function loadPosts() {
-    fetch('api/posts.php')
-        .then(response => {
-            // Debug: Log the raw response
-            console.log('Raw response:', response);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text(); // Get the raw text first
-        })
-        .then(text => {
-            // Debug: Log the raw text
-            console.log('Raw text:', text);
-            
-            try {
-                return JSON.parse(text); // Try to parse it as JSON
-            } catch (e) {
-                console.error('JSON Parse Error:', e);
-                console.error('Raw text that failed to parse:', text);
-                throw new Error('Failed to parse JSON response');
-            }
-        })
-        .then(data => {
-            // Debug: Log the parsed data
-            console.log('Parsed data:', data);
-            
-            if (data.status === 'success') {
-                displayPosts(data.data);
-            } else {
-                throw new Error(data.message || 'Failed to load posts');
-            }
-        })
-        .catch(error => {
-            console.error('Error loading posts:', error);
-            document.getElementById('posts-container').innerHTML = 
-                `<div class="alert alert-danger">Error loading posts: ${error.message}</div>`;
-        });
+    fetch('api/posts.php', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            displayPosts(data.data);
+        } else {
+            throw new Error(data.message || 'Failed to load posts');
+        }
+    })
+    .catch(error => {
+        console.error('Error loading posts:', error);
+        document.getElementById('posts-container').innerHTML = 
+            `<div class="alert alert-danger">Error loading posts: ${error.message}</div>`;
+    });
 }
 
 // Function to display posts
@@ -172,12 +158,13 @@ function createPost(event) {
     
     const formData = new FormData(event.target);
     const top = formData.get('top');
-    const body = formData.get('body') || '';  // Optional body field
+    const body = formData.get('body') || '';
 
     fetch('api/posts.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({ 
             top: top,
