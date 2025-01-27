@@ -1,33 +1,37 @@
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-4xl font-display font-bold text-neutral-900 mb-8">Community Discussion</h1>
+    <h1 class="text-4xl font-display font-bold text-neutral-900 mb-4">Culinary Community Discussion</h1>
+    <p class="text-lg text-neutral-600 mb-8">Share your cooking questions, tips, and experiences with fellow food enthusiasts. Start a discussion or join existing conversations about recipes, techniques, and kitchen adventures.</p>
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <!-- New Post Form -->
         <div class="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-medium text-neutral-900 mb-4">Start a Discussion</h2>
             <form id="new-post-form" class="space-y-4">
                 <div>
-                    <label for="post-top" class="block text-sm font-medium text-neutral-700 mb-1">Title</label>
+                    <label for="post-top" class="block text-sm font-medium text-neutral-700 mb-1">Topic</label>
                     <input 
                         type="text"
                         id="post-top" 
                         name="top" 
                         maxlength="255"
+                        placeholder="e.g., 'Looking for bread baking tips' or 'Best way to cook risotto?'"
                         class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         required
                     />
                 </div>
                 <div>
-                    <label for="post-body" class="block text-sm font-medium text-neutral-700 mb-1">Additional details (optional)</label>
+                    <label for="post-body" class="block text-sm font-medium text-neutral-700 mb-1">Details (optional)</label>
                     <textarea 
                         id="post-body" 
                         name="body" 
                         rows="3" 
+                        placeholder="Share more context about your question or discussion topic..."
                         class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     ></textarea>
                 </div>
                 <div class="flex justify-end">
                     <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
-                        Post
+                        Post Discussion
                     </button>
                 </div>
             </form>
