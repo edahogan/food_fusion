@@ -76,7 +76,7 @@ require_once('header.php');
             <!-- Team Member Cards -->
             <div class="group golden-padding" data-aos="fade-up" data-aos-delay="0">
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://tse1.mm.bing.net/th?id=OIP.NGYPVUEeLwt_mlreIU7kjQHaHa&pid=Api"
+                    <img src="https://th.bing.com/th/id/OIG3.fikZK6V1bTj8Sh5Wv.qu?w=1024&h=1024&rs=1&pid=ImgDetMain"
                          alt="Chef Portrait"
                          class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white/20">
                     <h3 class="text-xl font-bold text-white mb-2">Sarah Johnson</h3>
@@ -85,7 +85,7 @@ require_once('header.php');
             </div>
             <div class="group golden-padding" data-aos="fade-up" data-aos-delay="100">
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://tse3.mm.bing.net/th?id=OIP.ed6zwMWIUvCLEMLT-ds6wgHaLH&pid=Api"
+                    <img src="https://th.bing.com/th/id/OIG3.i6PKhWTbH1P3VRSS_7UA?w=1024&h=1024&rs=1&pid=ImgDetMain"
                          alt="Chef Portrait"
                          class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white/20">
                     <h3 class="text-xl font-bold text-white mb-2">Michael Chen</h3>
@@ -94,7 +94,7 @@ require_once('header.php');
             </div>
             <div class="group golden-padding" data-aos="fade-up" data-aos-delay="200">
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                    <img src="https://tse4.mm.bing.net/th?id=OIP.8EjlJVjuK5r9cT3Ey-afIQHaFW&pid=Api"
+                    <img src="https://th.bing.com/th/id/OIG2.T5f3zBGgiBfWzerJCXgq?rs=1&pid=ImgDetMain"
                          alt="Chef Portrait"
                          class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white/20">
                     <h3 class="text-xl font-bold text-white mb-2">Emma Martinez</h3>
