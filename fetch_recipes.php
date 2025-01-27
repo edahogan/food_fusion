@@ -73,7 +73,9 @@ try {
         echo "-->\n";
         
         // Use the primary image from DB or fallback to placeholder
-        $primaryImage = !empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+        $primaryImage = !empty($recipe['ImageURL']) ? $recipe['ImageURL'] : 
+                       (!empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 
+                       'https://via.placeholder.com/800x600');
         $additionalImages = !empty($recipe['AdditionalImages']) ? array_filter(explode(',', $recipe['AdditionalImages'])) : [];
         ?>
         <div class="recipe-card group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">

@@ -41,9 +41,9 @@ try {
         exit;
     }
 
-    $primaryImage = $recipe['PrimaryImage'] ?? 'https://via.placeholder.com/800x600';
+    $primaryImage = $recipe['ImageURL'] ?? $recipe['PrimaryImage'] ?? 'https://via.placeholder.com/800x600';
     $additionalImages = array_filter(explode(',', $recipe['AdditionalImages'] ?? ''));
-    $allImages = array_merge([$primaryImage], $additionalImages);
+    $allImages = array_filter(array_merge([$primaryImage], $additionalImages));
     ?>
 
     <div class="container mx-auto px-4 py-8">
