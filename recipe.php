@@ -16,10 +16,7 @@ try {
     // Debug log
     error_log("Attempting to fetch recipe ID: " . $_GET['id']);
 
-    // Sanitize the recipe ID
-    $recipe_id = mysqli_real_escape_string($conn, $_GET['id']);
-
-    // Replace the mysqli query with PDO
+    // Get PDO connection
     $pdo = getConnection();
     
     // Use prepared statement
