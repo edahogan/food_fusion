@@ -1,5 +1,4 @@
 <?php
-session_start();
 $page = $_GET['page'] ?? 'home';
 ?>
 <!DOCTYPE html>
@@ -38,6 +37,9 @@ $page = $_GET['page'] ?? 'home';
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
     </style>
 </head>
 <body class="bg-neutral-50 text-neutral-900 font-sans antialiased min-h-screen flex flex-col <?php echo isset($_SESSION['user_id']) ? 'logged-in' : ''; ?>">

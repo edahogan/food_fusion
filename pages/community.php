@@ -74,30 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPosts();
     
     // New post form submission
-    document.getElementById('new-post-form')?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const top = document.getElementById('post-top').value;
-        const body = document.getElementById('post-body').value;
-        
-        try {
-            const response = await fetch('api/posts.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ top, body })
-            });
-            
-            if (!response.ok) throw new Error('Failed to create post');
-            
-            document.getElementById('post-top').value = '';
-            document.getElementById('post-body').value = '';
-            await loadPosts();
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to create post. Please try again.');
-        }
-    });
+    document.getElementById('new-post-form')?.addEventListener('submit', createPost);
 
     // Reply form submission
     document.getElementById('reply-form')?.addEventListener('submit', async function(e) {
@@ -125,24 +102,106 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-async function loadPosts() {
-    try {
-        const response = await fetch('api/posts.php');
-        const posts = await response.json();
-        
-        const container = document.getElementById('posts-container');
-        container.innerHTML = '';
-        
-        // First, render all parent posts
-        const parentPosts = posts.filter(post => !post.ParentPostID);
-        parentPosts.forEach(post => {
-            const replies = posts.filter(reply => reply.ParentPostID === post.PostID);
-            container.appendChild(createPostElement(post, replies));
+// Function to load posts
+function loadPosts() {
+    fetch('api/posts.php')
+        .then(response => {
+            // Debug: Log the raw response
+            console.log('Raw response:', response);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text(); // Get the raw text first
+        })
+        .then(text => {
+            // Debug: Log the raw text
+            console.log('Raw text:', text);
+            
+            try {
+                return JSON.parse(text); // Try to parse it as JSON
+            } catch (e) {
+                console.error('JSON Parse Error:', e);
+                console.error('Raw text that failed to parse:', text);
+                throw new Error('Failed to parse JSON response');
+            }
+        })
+        .then(data => {
+            // Debug: Log the parsed data
+            console.log('Parsed data:', data);
+            
+            if (data.status === 'success') {
+                displayPosts(data.data);
+            } else {
+                throw new Error(data.message || 'Failed to load posts');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading posts:', error);
+            document.getElementById('posts-container').innerHTML = 
+                `<div class="alert alert-danger">Error loading posts: ${error.message}</div>`;
         });
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to load posts. Please try again.');
+}
+
+// Function to display posts
+function displayPosts(posts) {
+    const container = document.getElementById('posts-container');
+    if (!posts || posts.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500">No posts yet. Be the first to post!</p>';
+        return;
     }
+
+    container.innerHTML = posts.map(post => `
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-4">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="font-medium text-lg">${escapeHtml(post.first_name)} ${escapeHtml(post.last_name)}</h3>
+                    <p class="text-sm text-gray-500">${formatDate(post.created_at)}</p>
+                </div>
+            </div>
+            <h4 class="font-medium text-lg mb-2">${escapeHtml(post.top)}</h4>
+            ${post.body ? `<p class="text-gray-700 whitespace-pre-wrap">${escapeHtml(post.body)}</p>` : ''}
+            ${post.parent_post_id ? '<div class="mt-2 text-sm text-gray-500">(Reply)</div>' : ''}
+        </div>
+    `).join('');
+}
+
+// Function to create a new post
+function createPost(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const top = formData.get('top');
+    const body = formData.get('body') || '';  // Optional body field
+
+    fetch('api/posts.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            top: top,
+            body: body 
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            event.target.reset();
+            loadPosts(); // Reload posts after successful creation
+        } else {
+            throw new Error(data.message || 'Failed to create post');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to create post. Please try again.\n' + error.message);
+    });
 }
 
 function createPostElement(post, replies = []) {

@@ -1,14 +1,24 @@
 <?php
-$servername = "localhost";
-$username = "root"; // Default XAMPP username
-$password = ""; // Default XAMPP password is empty
-$dbname = "food_fusion"; // Your database name
+function getConnection() {
+    $host = 'localhost';
+    $db   = 'food_fusion';
+    $user = 'root';  // Replace with your database username
+    $pass = '';      // Replace with your database password
+    $charset = 'utf8mb4';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    try {
+        $pdo = new PDO($dsn, $user, $pass, $options);
+        return $pdo;
+    } catch (\PDOException $e) {
+        error_log("Connection failed: " . $e->getMessage());
+        throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
 }
 ?>

@@ -1,9 +1,13 @@
 <?php
 session_start();
 require_once 'auth.php';
-// require_once 'db_connection.php';
+require_once 'db_connection.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+
+// Add this at the beginning of your PHP post handling code
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Handle login and registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Include header
-include 'header.php';
+require_once 'header.php';
 
 // Load appropriate page content
 switch ($page) {
@@ -62,4 +66,28 @@ switch ($page) {
 include 'modals.php';
 
 // Include footer
-include 'footer.php';
+require_once 'footer.php';
+
+// Around line 247, you likely have something like this
+try {
+    // Add proper JSON response structure
+    $response = array(
+        'status' => 'success',
+        'message' => 'Post created successfully'
+    );
+    
+    // Add this before sending the response
+    error_log('Response data: ' . print_r($response, true));
+    
+    // Make sure to properly encode the JSON response
+    echo json_encode($response);
+} catch (Exception $e) {
+    // Return proper error response
+    $error_response = array(
+        'status' => 'error',
+        'message' => 'Failed to create post: ' . $e->getMessage()
+    );
+    
+    header('Content-Type: application/json');
+    echo json_encode($error_response);
+}

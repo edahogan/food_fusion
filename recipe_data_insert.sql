@@ -211,4 +211,22 @@ UPDATE Recipes SET Cuisine = 'Italian' WHERE Title LIKE '%Pasta%';
 UPDATE Recipes SET Cuisine = 'Japanese' WHERE Title LIKE '%Sushi%';
 UPDATE Recipes SET Cuisine = 'American' WHERE Title IN ('Decadent Chocolate Cake', 'Stack of Pancakes', 'Chocolate Chip Cookies');
 UPDATE Recipes SET Cuisine = 'French' WHERE Title IN ('Colorful Macarons', 'Freshly Baked Croissants');
-UPDATE Recipes SET Cuisine = 'Greek' WHERE Title = 'Greek Salad'; 
+UPDATE Recipes SET Cuisine = 'Greek' WHERE Title = 'Greek Salad';
+
+ALTER TABLE Recipes
+ADD COLUMN IsDeleted BOOLEAN DEFAULT FALSE;
+
+-- Drop the existing posts table if it exists
+DROP TABLE IF EXISTS posts;
+
+-- Create the posts table with the new structure
+CREATE TABLE posts (
+    post_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    top VARCHAR(255) NOT NULL,
+    body TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    parent_post_id INT DEFAULT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (parent_post_id) REFERENCES posts(post_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; 
