@@ -162,16 +162,16 @@ $(document).ready(function() {
         });
     });
 
-    // Handle signup form submission
-    $('#signup-form').submit(function(e) {
+    // Handle register form submission
+    $('#register-form').submit(function(e) {
         e.preventDefault();
         
         const formData = {
             action: 'register',
-            firstName: $('#signup-form input[name="firstName"]').val(),
-            lastName: $('#signup-form input[name="lastName"]').val(),
-            email: $('#signup-form input[name="email"]').val(),
-            password: $('#signup-form input[name="password"]').val()
+            firstName: $('#firstName').val(),
+            lastName: $('#lastName').val(),
+            email: $('#registerEmail').val(),
+            password: $('#registerPassword').val()
         };
 
         $.ajax({
@@ -181,19 +181,26 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    // Hide the signup popup
-                    $('#join-us-popup').hide();
+                    $('#register-message').removeClass('text-red-600').addClass('text-green-600')
+                        .html('Registration successful! Please log in.');
                     
-                    // Show success message and redirect to login
-                    alert('Registration successful! Please log in.');
-                    modals.login.show();
+                    // Clear the form
+                    $('#register-form')[0].reset();
+                    
+                    // Wait a moment before switching to login modal
+                    setTimeout(function() {
+                        modals.register.hide();
+                        modals.login.show();
+                    }, 1500);
                 } else {
-                    alert(response.message || 'Registration failed. Please try again.');
+                    $('#register-message').removeClass('text-green-600').addClass('text-red-600')
+                        .html(response.message);
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Registration error:', error);
-                alert('An error occurred during registration. Please try again.');
+                $('#register-message').removeClass('text-green-600').addClass('text-red-600')
+                    .html('An error occurred during registration. Please try again.');
             }
         });
     });

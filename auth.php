@@ -10,7 +10,7 @@ function registerUser($firstName, $lastName, $email, $password) {
         $stmt = $conn->prepare("SELECT UserID FROM Users WHERE Email = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
-            return "Email already registered";
+            return "An account with this email already exists";
         }
         
         // Hash password
