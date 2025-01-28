@@ -2,6 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$rootPath = '';
+if(!empty($_SERVER['DOCUMENT_ROOT'])) {
+    $rootPath = str_replace($_SERVER['DOCUMENT_ROOT'], '', dirname($_SERVER['SCRIPT_FILENAME']));
+}
 $page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
@@ -52,7 +56,7 @@ $page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
     <header class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
         <nav class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <a href="<?= $baseUrl ?>/index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
+                <a href="<?php echo $rootPath; ?>/index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
                 <div class="hidden xl:flex items-center space-x-8">
                     <a href="index.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Home</a>
                     <a href="about.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">About Us</a>
@@ -137,4 +141,4 @@ $page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
             </div>
         </nav>
     </header>
-    <main class="container mx-auto px-4 pt-24 pb-12 flex-grow">
+    <main class="container mx-auto px-4 pt-32 pb-12 flex-grow">

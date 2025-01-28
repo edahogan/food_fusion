@@ -159,7 +159,11 @@ function displayPosts(posts) {
                         <p class="text-sm text-gray-500">${formatDate(post.created_at)}</p>
                     </div>
                 </div>
-                <h4 class="font-medium text-lg mb-2">${escapeHtml(post.top)}</h4>
+                <h4 class="font-medium text-lg mb-2">
+                    <a href="post.php?id=${post.post_id}" class="text-primary-600 hover:text-primary-700">
+                        ${escapeHtml(post.top)}
+                    </a>
+                </h4>
                 ${post.body ? `<p class="text-gray-700 whitespace-pre-wrap mb-4">${escapeHtml(post.body)}</p>` : ''}
                 
                 ${postReplies.length > 0 ? `

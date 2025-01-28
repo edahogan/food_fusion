@@ -16,8 +16,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         error_log("Processing GET request for posts");
         
-        // Fetch posts with user information
-        $stmt = $pdo->prepare("
+        $query = "
             SELECT 
                 p.post_id,
                 p.user_id,
@@ -29,15 +28,20 @@ try {
                 u.LastName as last_name
             FROM posts p 
             JOIN Users u ON p.user_id = u.UserID
-            ORDER BY p.created_at DESC
-        ");
+        ";
         
-        if (!$stmt) {
-            error_log("SQL prepare error: " . print_r($pdo->errorInfo(), true));
-            throw new Exception("Failed to prepare SQL statement");
+        // If parent_id is provided, fetch only replies for that post
+        if (isset($_GET['parent_id'])) {
+            $query .= " WHERE p.parent_post_id = :parent_id";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute(['parent_id' => $_GET['parent_id']]);
+        } else {
+            // Original query for fetching all posts
+            $query .= " ORDER BY p.created_at DESC";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute();
         }
         
-        $stmt->execute();
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         if ($posts === false) {
