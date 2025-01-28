@@ -178,7 +178,9 @@ function displayReplies(replies) {
                 </div>
             </div>
             <div class="prose max-w-none">
-                <p class="text-neutral-700">${escapeHtml(reply.top)}</p>
+                <a href="post.php?id=${reply.post_id}" class="text-neutral-700 hover:text-primary-600 transition-colors">
+                    <p>${escapeHtml(reply.top)}</p>
+                </a>
             </div>
         </div>
     `).join('');
