@@ -2,6 +2,10 @@
 require_once 'header.php';
 require_once 'db_connection.php';
 
+// Add error logging at the start of the file
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Add the formatDate function
 function formatDate($dateString) {
     $date = new DateTime($dateString);
@@ -24,12 +28,13 @@ try {
             p.top,
             p.body,
             p.created_at,
+            p.parent_post_id,
             u.FirstName as first_name,
             u.LastName as last_name,
             (SELECT COUNT(*) FROM posts WHERE parent_post_id = p.post_id) as reply_count
         FROM posts p 
         JOIN Users u ON p.user_id = u.UserID
-        WHERE p.post_id = :post_id AND p.parent_post_id IS NULL
+        WHERE p.post_id = :post_id
     ");
     
     $stmt->execute(['post_id' => $_GET['id']]);
@@ -144,18 +149,29 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadReplies() {
     const postId = <?= $post['post_id'] ?>;
     
-    fetch(`api/posts.php?parent_id=${postId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                displayReplies(data.data);
-            }
-        })
-        .catch(error => {
-            console.error('Error loading replies:', error);
-            document.getElementById('replies-container').innerHTML = 
-                '<div class="alert alert-danger">Error loading replies</div>';
-        });
+    fetch(`api/posts.php?parent_id=${postId}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            displayReplies(data.data);
+        } else {
+            throw new Error(data.message || 'Failed to load replies');
+        }
+    })
+    .catch(error => {
+        console.error('Error loading replies:', error);
+        document.getElementById('replies-container').innerHTML = 
+            '<div class="alert alert-danger">Error loading replies: ' + error.message + '</div>';
+    });
 }
 
 function displayReplies(replies) {
@@ -178,9 +194,7 @@ function displayReplies(replies) {
                 </div>
             </div>
             <div class="prose max-w-none">
-                <a href="post.php?id=${reply.post_id}" class="text-neutral-700 hover:text-primary-600 transition-colors">
-                    <p>${escapeHtml(reply.top)}</p>
-                </a>
+                <p class="text-neutral-700">${escapeHtml(reply.top)}</p>
             </div>
         </div>
     `).join('');

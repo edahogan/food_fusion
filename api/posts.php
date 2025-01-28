@@ -37,7 +37,7 @@ try {
             $stmt->execute(['parent_id' => $_GET['parent_id']]);
         } else {
             // Original query for fetching all posts
-            $query .= " ORDER BY p.created_at DESC";
+            $query .= " WHERE p.parent_post_id IS NULL ORDER BY p.created_at DESC";
             $stmt = $pdo->prepare($query);
             $stmt->execute();
         }
