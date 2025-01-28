@@ -1,5 +1,17 @@
-<?php 
-require_once dirname(__DIR__) . '/header.php';
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+echo "Current directory: " . __DIR__ . "<br>";
+echo "Looking for header.php at: " . __DIR__ . '/header.php' . "<br>";
+
+$headerPath = __DIR__ . '/header.php';
+if (file_exists($headerPath)) {
+    require_once $headerPath;
+} else {
+    echo "Header file not found at: $headerPath";
+    exit;
+}
 ?>
 
 <div class="min-h-screen bg-gradient-to-b from-amber-50 to-white">

@@ -1,5 +1,8 @@
 <?php
-$page = $_GET['page'] ?? 'home';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -49,7 +52,7 @@ $page = $_GET['page'] ?? 'home';
     <header class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
         <nav class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <a href="index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
+                <a href="<?= $baseUrl ?>/index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
                 <div class="hidden xl:flex items-center space-x-8">
                     <a href="index.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Home</a>
                     <a href="about.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">About Us</a>
@@ -82,7 +85,7 @@ $page = $_GET['page'] ?? 'home';
                                     </svg>
                                     Add New Recipe
                                 </a>
-                                <a href="pages/recipes.php?u=<?= $_SESSION['user_id'] ?>" class="flex items-center px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+                                <a href="recipes.php?u=<?= $_SESSION['user_id'] ?>" class="flex items-center px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
