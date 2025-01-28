@@ -123,10 +123,11 @@ function loadPosts() {
         return response.json();
     })
     .then(data => {
-        if (data.status === 'success') {
+        if (data.status === 'success' && data.data.length > 0) {
             displayPosts(data.data);
         } else {
-            throw new Error(data.message || 'Failed to load posts');
+            document.getElementById('posts-container').innerHTML = 
+                '<p class="text-center text-gray-500">No posts yet. Be the first to post!</p>';
         }
     })
     .catch(error => {

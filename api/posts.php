@@ -28,13 +28,24 @@ try {
                 u.first_name,
                 u.last_name
             FROM posts p 
-            JOIN users u ON p.user_id = u.id 
+            JOIN users u ON p.user_id = u.UserID
             ORDER BY p.created_at DESC
         ");
+        
+        if (!$stmt) {
+            error_log("SQL prepare error: " . print_r($conn->errorInfo(), true));
+            throw new Exception("Failed to prepare SQL statement");
+        }
+        
         $stmt->execute();
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        error_log("Posts data: " . print_r($posts, true));
+        if ($posts === false) {
+            error_log("SQL fetch error: " . print_r($stmt->errorInfo(), true));
+            throw new Exception("Failed to fetch posts");
+        }
+        
+        error_log("Posts data: " . print_r($posts, true)); // Log the fetched posts
         
         $response = [
             'status' => 'success',
@@ -43,7 +54,6 @@ try {
         
         echo json_encode($response);
         exit;
-        
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("Processing POST request for posts");
         
