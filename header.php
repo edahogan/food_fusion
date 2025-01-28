@@ -47,14 +47,14 @@ $page = $_GET['page'] ?? 'home';
         <nav class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <a href="index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
-                <div class="hidden lg:flex items-center space-x-8">
+                <div class="hidden xl:flex items-center space-x-8">
                     <a href="index.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Home</a>
-                    <a href="index.php?page=about" class="text-neutral-600 hover:text-neutral-900 transition-colors">About Us</a>
-                    <a href="index.php?page=recipes" class="text-neutral-600 hover:text-neutral-900 transition-colors">Recipes</a>
-                    <a href="index.php?page=community" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
-                    <a href="index.php?page=resources" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
-                    <a href="index.php?page=education" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
-                    <a href="index.php?page=contact" class="text-neutral-600 hover:text-neutral-900 transition-colors">Contact</a>
+                    <a href="about.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">About Us</a>
+                    <a href="recipes.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Recipes</a>
+                    <a href="community.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
+                    <a href="resources.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
+                    <a href="education.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
+                    <a href="contact.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Contact</a>
                     
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="profile.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Profile</a>
@@ -79,7 +79,7 @@ $page = $_GET['page'] ?? 'home';
                                     </svg>
                                     Add New Recipe
                                 </a>
-                                <a href="my_recipes.php" class="flex items-center px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+                                <a href="pages/recipes.php?u=<?= $_SESSION['user_id'] ?>" class="flex items-center px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
@@ -107,20 +107,20 @@ $page = $_GET['page'] ?? 'home';
                         </div>
                     <?php endif; ?>
                 </div>
-                <button data-collapse-toggle="mobile-menu" type="button" class="lg:hidden p-2 text-neutral-600 hover:text-neutral-900">
+                <button data-collapse-toggle="mobile-menu" type="button" class="xl:hidden p-2 text-neutral-600 hover:text-neutral-900">
                     <span class="sr-only">Open menu</span>
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
-            <div class="hidden lg:hidden" id="mobile-menu">
+            <div class="hidden xl:hidden" id="mobile-menu">
                 <div class="pt-2 pb-4 space-y-1">
                     <a href="index.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Home</a>
-                    <a href="index.php?page=about" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">About Us</a>
-                    <a href="index.php?page=recipes" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Recipes</a>
-                    <a href="index.php?page=community" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Community</a>
-                    <a href="index.php?page=resources" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Resources</a>
-                    <a href="index.php?page=education" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
-                    <a href="index.php?page=contact" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Contact Us</a>
+                    <a href="about.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">About Us</a>
+                    <a href="recipes.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Recipes</a>
+                    <a href="community.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Community</a>
+                    <a href="resources.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Resources</a>
+                    <a href="education.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
+                    <a href="contact.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
                     <?php else: ?>
