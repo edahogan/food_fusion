@@ -4,14 +4,14 @@ require_once('header.php');
 ?>
 
 <!-- Hero Section with Parallax -->
-<section class="relative golden-height overflow-hidden">
+<section class="relative golden-height overflow-hidden rounded-2xl">
     <div class="absolute inset-0">
         <img src="https://th.bing.com/th/id/OIG1.K9SxaSY.GjRTARX2QJDa?pid=ImgGn" 
              alt="Chef Plating"
              class="w-full h-full object-cover rounded-2xl"
              style="transform: translateZ(-1px) scale(1.5);"
              fetchpriority="high">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent rounded-2xl"></div>
     </div>
     <div class="relative h-full flex items-center">
         <div class="container mx-auto px-4">
@@ -61,14 +61,14 @@ require_once('header.php');
 </section>
 
 <!-- Team Section with Parallax -->
-<section class="relative py-32 overflow-hidden">
+<section class="relative py-32 overflow-hidden rounded-2xl">
     <div class="absolute inset-0">
         <img src="https://tse2.mm.bing.net/th?id=OIP.Zni-jBodqdDHlrLjjEgTTQHaFE&pid=Api"
              alt="Restaurant Atmosphere"
              class="w-full h-full object-cover rounded-2xl"
              style="transform: translateZ(-1px) scale(1.5);"
              loading="lazy">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 rounded-2xl"></div>
     </div>
     <div class="relative container mx-auto px-4 text-center">
         <h2 class="golden-text font-display font-bold text-white mb-16 opacity-0" data-aos="fade-up">Meet Our Team</h2>
@@ -149,7 +149,7 @@ require_once('header.php');
 </section>
 
 <!-- Call to Action -->
-<section class="relative golden-height overflow-hidden bg-primary-900 py-32 pb-40">
+<section class="relative golden-height overflow-hidden bg-primary-900 py-32 pb-40 rounded-2xl">
     <div class="absolute inset-0 opacity-20">
         <img src="https://tse3.mm.bing.net/th?id=OIP.BsG_5TJXwfJu7spDQS3O_gHaLG&pid=Api"
              alt="Background Pattern"

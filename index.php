@@ -39,7 +39,7 @@ ini_set('display_errors', 1);
 require_once 'header.php';
 
 // Load the home page content
-include 'pages/home.php';
+include 'home.php';
 
 // Include modals
 include 'modals.php';

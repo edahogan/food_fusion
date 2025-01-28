@@ -1,3 +1,6 @@
+<?php
+require_once 'header.php';
+?>
 <div class="max-w-4xl mx-auto">
     <h1 class="text-4xl font-display font-bold text-neutral-900 mb-4">Culinary Community Discussion</h1>
     <p class="text-lg text-neutral-600 mb-8">Share your cooking questions, tips, and experiences with fellow food enthusiasts. Start a discussion or join existing conversations about recipes, techniques, and kitchen adventures.</p>

@@ -1,5 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/food_fusion/db_connection.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/food_fusion/header.php';
 
 // Initialize the $conn variable
 $conn = getConnection();
