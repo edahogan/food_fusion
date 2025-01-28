@@ -10,14 +10,14 @@ session_start();
 require_once 'db_connection.php';
 
 try {
-    $conn = getConnection();
+    $pdo = getConnection();
     error_log("Database connection successful");
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         error_log("Processing GET request for posts");
         
         // Fetch posts with user information
-        $stmt = $conn->prepare("
+        $stmt = $pdo->prepare("
             SELECT 
                 p.post_id,
                 p.user_id,
@@ -25,15 +25,15 @@ try {
                 p.body,
                 p.created_at,
                 p.parent_post_id,
-                u.first_name,
-                u.last_name
+                u.FirstName as first_name,
+                u.LastName as last_name
             FROM posts p 
-            JOIN users u ON p.user_id = u.UserID
+            JOIN Users u ON p.user_id = u.UserID
             ORDER BY p.created_at DESC
         ");
         
         if (!$stmt) {
-            error_log("SQL prepare error: " . print_r($conn->errorInfo(), true));
+            error_log("SQL prepare error: " . print_r($pdo->errorInfo(), true));
             throw new Exception("Failed to prepare SQL statement");
         }
         
@@ -47,12 +47,10 @@ try {
         
         error_log("Posts data: " . print_r($posts, true)); // Log the fetched posts
         
-        $response = [
+        echo json_encode([
             'status' => 'success',
             'data' => $posts
-        ];
-        
-        echo json_encode($response);
+        ]);
         exit;
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("Processing POST request for posts");
@@ -94,22 +92,25 @@ try {
             http_response_code(400);
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Post title is required'
+                'message' => 'Post content is required'
             ]);
             exit;
         }
 
         try {
             // Insert new post
-            $stmt = $conn->prepare("INSERT INTO posts (user_id, top, body, created_at, parent_post_id) VALUES (?, ?, ?, NOW(), ?)");
+            $stmt = $pdo->prepare("
+                INSERT INTO posts (user_id, top, body, parent_post_id) 
+                VALUES (:user_id, :top, :body, :parent_post_id)
+            ");
             $stmt->execute([
-                $_SESSION['user_id'],
-                $data['top'],
-                $data['body'] ?? null,
-                $data['parent_post_id'] ?? null
+                'user_id' => $_SESSION['user_id'],
+                'top' => $data['top'],
+                'body' => $data['body'] ?? null,
+                'parent_post_id' => $data['parent_post_id'] ?? null
             ]);
             
-            $postId = $conn->lastInsertId();
+            $postId = $pdo->lastInsertId();
             
             error_log("Post created successfully with ID: " . $postId);
             http_response_code(201); // Created
@@ -135,8 +136,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => 'Server error occurred',
-        'debug' => $e->getMessage() // Remove this in production
+        'message' => 'Server error occurred'
     ]);
     exit;
 }

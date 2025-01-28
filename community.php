@@ -145,19 +145,45 @@ function displayPosts(posts) {
         return;
     }
 
-    container.innerHTML = posts.map(post => `
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-4">
-            <div class="flex items-start justify-between mb-4">
-                <div>
-                    <h3 class="font-medium text-lg">${escapeHtml(post.first_name)} ${escapeHtml(post.last_name)}</h3>
-                    <p class="text-sm text-gray-500">${formatDate(post.created_at)}</p>
+    // Group posts by parent_post_id
+    const mainPosts = posts.filter(post => !post.parent_post_id);
+    const replies = posts.filter(post => post.parent_post_id);
+    
+    container.innerHTML = mainPosts.map(post => {
+        const postReplies = replies.filter(reply => reply.parent_post_id === post.post_id);
+        return `
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-4">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="font-medium text-lg">${escapeHtml(post.first_name)} ${escapeHtml(post.last_name)}</h3>
+                        <p class="text-sm text-gray-500">${formatDate(post.created_at)}</p>
+                    </div>
                 </div>
+                <h4 class="font-medium text-lg mb-2">${escapeHtml(post.top)}</h4>
+                ${post.body ? `<p class="text-gray-700 whitespace-pre-wrap mb-4">${escapeHtml(post.body)}</p>` : ''}
+                
+                ${postReplies.length > 0 ? `
+                    <div class="mt-4 pl-6 border-l-2 border-neutral-100 space-y-4">
+                        ${postReplies.map(reply => `
+                            <div class="bg-neutral-50 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-medium text-neutral-900">${escapeHtml(reply.first_name)} ${escapeHtml(reply.last_name)}</span>
+                                    <span class="text-sm text-neutral-500">${formatDate(reply.created_at)}</span>
+                                </div>
+                                <p class="text-neutral-700">${escapeHtml(reply.top)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button onclick="openReplyModal(${post.post_id})" class="mt-4 text-sm text-primary-600 hover:text-primary-700">
+                        Reply
+                    </button>
+                <?php endif; ?>
             </div>
-            <h4 class="font-medium text-lg mb-2">${escapeHtml(post.top)}</h4>
-            ${post.body ? `<p class="text-gray-700 whitespace-pre-wrap">${escapeHtml(post.body)}</p>` : ''}
-            ${post.parent_post_id ? '<div class="mt-2 text-sm text-gray-500">(Reply)</div>' : ''}
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Function to create a new post
