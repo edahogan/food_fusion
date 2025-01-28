@@ -6,7 +6,7 @@
                     <h3 class="text-xl font-display font-semibold mb-4">FoodFusion</h3>
                     <p class="text-neutral-400">Discover a world of culinary delights and connect with food enthusiasts from around the globe.</p>
                 </div>
-                <div>
+                <div class="flex flex-col items-center">
                     <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
                     <div class="flex space-x-4">
                         <a href="https://facebook.com/example" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white transition-colors">
