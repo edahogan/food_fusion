@@ -315,7 +315,10 @@
     <div class="container mx-auto px-4 text-center">
         <h2 class="text-4xl font-display font-bold text-neutral-900 mb-8">Join Our Culinary Community</h2>
         <p class="text-xl text-neutral-600 max-w-2xl mx-auto mb-12">Connect with food lovers, share your recipes, and explore endless culinary possibilities.</p>
-        <button id="join-us-button" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+        <button type="button" 
+            data-modal-target="register-modal" 
+            data-modal-toggle="register-modal" 
+            class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-900 bg-white hover:bg-neutral-100 rounded-xl transition-colors duration-300 transform hover:scale-105">
             Join Now
         </button>
     </div>

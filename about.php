@@ -168,9 +168,12 @@ require_once('header.php');
             <p class="text-xl text-white/90 mb-12 opacity-0" data-aos="fade-up" data-aos-delay="100">
                 Be part of our growing community and discover the joy of cooking with FoodFusion.
             </p>
-            <a href="#" class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-900 bg-white hover:bg-neutral-100 rounded-xl transition-colors duration-300 transform hover:scale-105">
+            <button type="button" 
+                data-modal-target="register-modal" 
+                data-modal-toggle="register-modal" 
+                class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-900 bg-white hover:bg-neutral-100 rounded-xl transition-colors duration-300 transform hover:scale-105">
                 Join Now
-            </a>
+            </button>
         </div>
     </div>
 </section>

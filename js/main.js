@@ -60,13 +60,16 @@ $(document).ready(function() {
         return null;
     }
 
-    // Store modal instances
+    // Initialize modals after DOM is ready
     const modals = {
         login: ensureModalInitialization('login-modal'),
         register: ensureModalInitialization('register-modal'),
         signup: ensureModalInitialization('signup-popup'),
         cookieSettings: ensureModalInitialization('cookie-settings-modal')
     };
+
+    // Make modals available globally if needed
+    window.modals = modals;
 
     // Handle modal close buttons
     document.querySelectorAll('[data-modal-hide]').forEach(button => {
@@ -247,21 +250,18 @@ $(document).ready(function() {
     });
 
     // Handle cookie settings modal
-    $('#open-cookie-settings').click(function() {
+    $('#open-cookie-settings').click(function(e) {
+        e.preventDefault();
         const cookieModal = document.getElementById('cookie-settings-modal');
         if (cookieModal) {
-            const modalInstance = modals.cookieSettings || new Modal(cookieModal, {
-                placement: 'center',
-                backdrop: 'dynamic',
-                closable: true
-            });
-            modals.cookieSettings = modalInstance;
-            modalInstance.show();
-            
-            // Set checkboxes based on saved preferences
-            $('#functional-cookies').prop('checked', cookieConsent.functional);
-            $('#analytics-cookies').prop('checked', cookieConsent.analytics);
-            $('#marketing-cookies').prop('checked', cookieConsent.marketing);
+            if (!modals.cookieSettings) {
+                modals.cookieSettings = new Modal(cookieModal, {
+                    placement: 'center',
+                    backdrop: 'dynamic',
+                    closable: true
+                });
+            }
+            modals.cookieSettings.show();
         }
     });
 
