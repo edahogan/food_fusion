@@ -43,8 +43,8 @@
     <?php require_once($_SERVER['DOCUMENT_ROOT'].'/food_fusion/header.php'); ?>
 
     <!-- Hero Section -->
-    <div class="relative h-[60vh] parallax" style="background-image: url('https://th.bing.com/th/id/OIG1.4YCRuRoct7kK2tK0omx0');">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50 flex items-center justify-center">
+    <div class="relative h-[60vh] parallax rounded-xl" style="background-image: url('https://th.bing.com/th/id/OIG1.4YCRuRoct7kK2tK0omx0');">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50 flex items-center justify-center rounded-xl">
             <div class="text-center px-4">
                 <h1 class="text-5xl md:text-6xl font-bold text-white mb-4">Educational Resources</h1>
                 <p class="text-xl text-white/90 max-w-2xl mx-auto">Discover expert tips, tutorials, and guides to enhance your culinary journey</p>
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Educational Resources Section -->
-    <section class="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+    <section class="px-0 md:px-0 max-w-7xl mx-auto mt-16 mb-24">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php
             try {
