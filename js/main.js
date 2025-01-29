@@ -31,26 +31,41 @@ $(document).ready(function() {
         observer.observe(el);
     });
 
-    // Show signup popup after 3 seconds if user is not logged in and hasn't closed it before
-    if (!localStorage.getItem('signupPopupClosed') && !$('body').hasClass('logged-in')) {
+    // Show signup popup after 3 seconds if user is not logged in
+    if (!$('body').hasClass('logged-in')) {
         setTimeout(function() {
             const signupPopup = document.getElementById('signup-popup');
             if (signupPopup) {
-                const modal = new Modal(signupPopup, {
-                    onHide: () => {
-                        localStorage.setItem('signupPopupClosed', 'true');
-                    }
+                const modalInstance = modals.signup || new Modal(signupPopup, {
+                    placement: 'center',
+                    backdrop: 'dynamic',
+                    closable: true
                 });
-                modal.show();
+                modalInstance.show();
             }
         }, 3000);
     }
 
-    // Initialize all modals
+    // Replace the ensureModalInitialization function and its usage
+    function ensureModalInitialization(modalId) {
+        const modalElement = document.getElementById(modalId);
+        if (modalElement) {
+            // Create new Modal instance if it doesn't exist
+            return new Modal(modalElement, {
+                placement: 'center',
+                backdrop: 'dynamic',
+                closable: true
+            });
+        }
+        return null;
+    }
+
+    // Store modal instances
     const modals = {
-        signup: new Modal(document.getElementById('signup-popup')),
-        login: new Modal(document.getElementById('login-modal')),
-        register: new Modal(document.getElementById('register-modal'))
+        login: ensureModalInitialization('login-modal'),
+        register: ensureModalInitialization('register-modal'),
+        signup: ensureModalInitialization('signup-popup'),
+        cookieSettings: ensureModalInitialization('cookie-settings-modal')
     };
 
     // Handle modal close buttons
@@ -233,13 +248,21 @@ $(document).ready(function() {
 
     // Handle cookie settings modal
     $('#open-cookie-settings').click(function() {
-        const modal = new Modal(document.getElementById('cookie-settings-modal'));
-        modal.show();
-        
-        // Set checkboxes based on saved preferences
-        $('#functional-cookies').prop('checked', cookieConsent.functional);
-        $('#analytics-cookies').prop('checked', cookieConsent.analytics);
-        $('#marketing-cookies').prop('checked', cookieConsent.marketing);
+        const cookieModal = document.getElementById('cookie-settings-modal');
+        if (cookieModal) {
+            const modalInstance = modals.cookieSettings || new Modal(cookieModal, {
+                placement: 'center',
+                backdrop: 'dynamic',
+                closable: true
+            });
+            modals.cookieSettings = modalInstance;
+            modalInstance.show();
+            
+            // Set checkboxes based on saved preferences
+            $('#functional-cookies').prop('checked', cookieConsent.functional);
+            $('#analytics-cookies').prop('checked', cookieConsent.analytics);
+            $('#marketing-cookies').prop('checked', cookieConsent.marketing);
+        }
     });
 
     // Save cookie preferences
@@ -257,9 +280,10 @@ $(document).ready(function() {
         // Initialize services based on new preferences
         initializeThirdPartyServices();
 
-        // Close modal
-        const modal = new Modal(document.getElementById('cookie-settings-modal'));
-        modal.hide();
+        // Close modal using the stored instance
+        if (modals.cookieSettings) {
+            modals.cookieSettings.hide();
+        }
     });
 
     // Function to initialize third-party services based on consent
@@ -339,19 +363,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Ensure modals are initialized correctly
-    function ensureModalInitialization(modalId) {
-        const modalElement = document.getElementById(modalId);
-        if (modalElement) {
-            return Modal.getInstance(modalElement) || new Modal(modalElement);
-        }
-        return null;
-    }
-
-    // Use the function to ensure modals are initialized
-    ensureModalInitialization('login-modal');
-    ensureModalInitialization('register-modal');
 
     // Close mobile menu when clicking outside
     $(document).click(function(e) {
