@@ -44,6 +44,12 @@ try {
         header('Location: community.php');
         exit;
     }
+} catch (PDOException $e) {
+    // Handle database errors
+    error_log($e->getMessage());
+    header('Location: error.php');
+    exit;
+}
 ?>
 
 <div class="max-w-4xl mx-auto px-4 py-8">
@@ -222,4 +228,4 @@ function formatDate(dateString) {
 }
 </script>
 
-<?php require_once 'footer.php'; ?> 
+<?php require_once 'footer.php'; ?>
