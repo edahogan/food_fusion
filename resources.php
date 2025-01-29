@@ -2,9 +2,6 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-echo "Current directory: " . __DIR__ . "<br>";
-echo "Looking for header.php at: " . __DIR__ . '/header.php' . "<br>";
-
 $headerPath = __DIR__ . '/header.php';
 if (file_exists($headerPath)) {
     require_once $headerPath;
@@ -14,34 +11,23 @@ if (file_exists($headerPath)) {
 }
 ?>
 
-<div class="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+<div class="min-h-screen">
     <!-- Hero Section -->
-    <div class="relative h-[50vh] overflow-hidden">
-        <div class="absolute inset-0 bg-black/40 z-10"></div>
+    <div class="relative h-[50vh] overflow-hidden rounded-b-3xl">
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://th.bing.com/th/id/R.dafd3090074a3bb7a5f40f9cad7f3b79?rik=Rw%2b%2brctxUfLXfA&pid=ImgRaw&r=0');" data-parallax="scroll" data-speed="0.5"></div>
-        <div class="relative z-20 container mx-auto px-4 h-full flex items-center justify-center">
-            <h1 class="text-5xl md:text-6xl font-bold text-white text-center">Culinary Resources</h1>
+        <div class="relative z-20 container mx-auto px-4 h-full flex items-center">
+            <div class="flex flex-col space-y-6 max-w-2xl">
+                <h1 class="text-5xl md:text-6xl font-bold text-white">Culinary Resources</h1>
+                <p class="text-xl md:text-2xl text-white/90">
+                    Discover our carefully curated collection of culinary resources, designed to enhance your cooking journey and expand your culinary knowledge
+                </p>
+            </div>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-16 space-y-32">
-        <!-- Culinary Resources Section -->
-        <section id="culinary-resources" class="scroll-mt-24">
-            <div class="grid grid-cols-1 md:grid-cols-golden gap-8">
-                <div class="space-y-6">
-                    <h2 class="text-4xl font-bold text-gray-800">Culinary Resources</h2>
-                    <p class="text-lg text-gray-600">Discover our carefully curated collection of culinary resources, designed to enhance your cooking journey and expand your culinary knowledge.</p>
-                    <div class="group hover:scale-105 transition-transform duration-300">
-                        <div class="relative overflow-hidden rounded-xl aspect-golden">
-                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" alt="Culinary Resources" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Recipe Cards Section -->
         <section id="recipe-cards" class="scroll-mt-24">
             <div class="grid grid-cols-1 md:grid-cols-golden gap-8">
@@ -122,6 +108,17 @@ if (file_exists($headerPath)) {
                             echo '</div>';
                         }
                         ?>
+                    </div>
+
+                    <!-- Add Find More Recipes button -->
+                    <div class="flex justify-center mt-8">
+                        <a href="recipes.php" 
+                           class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                            <span>Find More Recipes</span>
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
