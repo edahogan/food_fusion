@@ -132,6 +132,7 @@ $page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
                     <a href="education.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
                     <a href="contact.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="profile.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Profile</a>
                         <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
                     <?php else: ?>
                         <button id="login-button-mobile" class="block w-full text-left px-3 py-2 text-primary-600 hover:text-primary-700 font-medium">Login</button>

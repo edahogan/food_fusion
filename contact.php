@@ -19,7 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto">
             <h1 class="text-4xl md:text-5xl font-display font-bold text-neutral-900 mb-6 text-center">Get in Touch</h1>
-            <p class="text-neutral-600 text-center mb-12">Have a question or suggestion? We'd love to hear from you!</p>
+            <p class="text-neutral-600 text-center mb-12">
+                Whether you have a question, recipe request, or feedback, we'd love to hear from you. 
+            </p>
             
             <?php if (isset($success)): ?>
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded-lg animate-fade-in-down">
@@ -72,10 +74,96 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
-                        <option value="recipe">Recipe Request</option>
+                        <option value="recipe_request">Recipe Request</option>
                         <option value="feedback">Feedback</option>
                         <option value="support">Support</option>
                     </select>
+                </div>
+
+                <div id="recipe-request-fields" class="hidden space-y-4 mt-4">
+                    <div class="group">
+                        <label for="cuisine_type" class="block text-sm font-medium text-neutral-700 mb-1 group-hover:text-primary-600 transition-colors">
+                            Cuisine Type
+                        </label>
+                        <select 
+                            id="cuisine_type" 
+                            name="cuisine_type" 
+                            class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+                                   shadow-sm hover:shadow-md transition-all duration-200
+                                   bg-white/50 backdrop-blur-sm"
+                        >
+                            <option value="">Select cuisine type</option>
+                            <option value="American">American</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Asian">Asian</option>
+                            <option value="Mediterranean">Mediterranean</option>
+                            <option value="French">French</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="Greek">Greek</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="International">International</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="dietary_preferences" class="block text-sm font-medium text-neutral-700 mb-1 group-hover:text-primary-600 transition-colors">
+                            Dietary Preferences
+                        </label>
+                        <select 
+                            id="dietary_preferences" 
+                            name="dietary_preferences" 
+                            class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+                                   shadow-sm hover:shadow-md transition-all duration-200
+                                   bg-white/50 backdrop-blur-sm"
+                        >
+                            <option value="">Select dietary preference</option>
+                            <option value="None">None</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Vegan">Vegan</option>
+                            <option value="Pescatarian">Pescatarian</option>
+                            <option value="Gluten-Free">Gluten-Free</option>
+                            <option value="Dairy-Free">Dairy-Free</option>
+                            <option value="Keto">Keto</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="feedback-fields" class="hidden space-y-4 mt-4">
+                    <div class="group">
+                        <label for="feedback_type" class="block text-sm font-medium text-neutral-700 mb-1 group-hover:text-primary-600 transition-colors">
+                            Feedback Type
+                        </label>
+                        <select 
+                            id="feedback_type" 
+                            name="feedback_type" 
+                            class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+                                   shadow-sm hover:shadow-md transition-all duration-200
+                                   bg-white/50 backdrop-blur-sm"
+                        >
+                            <option value="">Select feedback type</option>
+                            <option value="Website">Website Experience</option>
+                            <option value="Recipes">Recipe Quality</option>
+                            <option value="Features">Feature Suggestions</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="rating" class="block text-sm font-medium text-neutral-700 mb-1 group-hover:text-primary-600 transition-colors">
+                            Rating
+                        </label>
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" id="rating-5" name="rating" value="5" class="hidden peer/5">
+                            <label for="rating-5" class="cursor-pointer text-2xl text-gray-300 peer-checked/5:text-yellow-400">★</label>
+                            <input type="radio" id="rating-4" name="rating" value="4" class="hidden peer/4">
+                            <label for="rating-4" class="cursor-pointer text-2xl text-gray-300 peer-checked/4:text-yellow-400">★</label>
+                            <input type="radio" id="rating-3" name="rating" value="3" class="hidden peer/3">
+                            <label for="rating-3" class="cursor-pointer text-2xl text-gray-300 peer-checked/3:text-yellow-400">★</label>
+                            <input type="radio" id="rating-2" name="rating" value="2" class="hidden peer/2">
+                            <label for="rating-2" class="cursor-pointer text-2xl text-gray-300 peer-checked/2:text-yellow-400">★</label>
+                            <input type="radio" id="rating-1" name="rating" value="1" class="hidden peer/1">
+                            <label for="rating-1" class="cursor-pointer text-2xl text-gray-300 peer-checked/1:text-yellow-400">★</label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="group">
@@ -143,3 +231,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </main>
 
 <?php require_once 'footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const subjectSelect = document.getElementById('subject');
+    const recipeRequestFields = document.getElementById('recipe-request-fields');
+    const feedbackFields = document.getElementById('feedback-fields');
+
+    subjectSelect.addEventListener('change', function() {
+        // Hide all conditional fields first
+        recipeRequestFields.classList.add('hidden');
+        feedbackFields.classList.add('hidden');
+
+        // Show relevant fields based on selection
+        if (this.value === 'recipe_request') {
+            recipeRequestFields.classList.remove('hidden');
+        } else if (this.value === 'feedback') {
+            feedbackFields.classList.remove('hidden');
+        }
+    });
+});
+</script>

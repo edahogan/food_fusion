@@ -352,4 +352,25 @@ $(document).ready(function() {
     // Use the function to ensure modals are initialized
     ensureModalInitialization('login-modal');
     ensureModalInitialization('register-modal');
+
+    // Close mobile menu when clicking outside
+    $(document).click(function(e) {
+        const mobileMenu = $('#mobile-menu');
+        const mobileMenuButton = $('[data-collapse-toggle="mobile-menu"]');
+        
+        // If click target is not the menu or menu button and menu is visible
+        if (!mobileMenu.is(e.target) && 
+            !mobileMenu.has(e.target).length && 
+            !mobileMenuButton.is(e.target) && 
+            !mobileMenuButton.has(e.target).length && 
+            mobileMenu.hasClass('block')) {
+            
+            mobileMenu.addClass('hidden').removeClass('block');
+        }
+    });
+
+    // Prevent menu from closing when clicking inside it
+    $('#mobile-menu').click(function(e) {
+        e.stopPropagation();
+    });
 });
