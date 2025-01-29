@@ -230,6 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </main>
 
+<?php require_once 'modals.php'; ?>
 <?php require_once 'footer.php'; ?>
 
 <script>

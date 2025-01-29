@@ -147,8 +147,7 @@
         });
     </script>
 
-    </main>
-
-    <?php require_once($_SERVER['DOCUMENT_ROOT'].'/food_fusion/footer.php'); ?>
+    <?php require_once 'modals.php'; ?>
+    <?php require_once 'footer.php'; ?>
 </body>
 </html>

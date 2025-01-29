@@ -7,6 +7,11 @@ if(!empty($_SERVER['DOCUMENT_ROOT'])) {
     $rootPath = str_replace($_SERVER['DOCUMENT_ROOT'], '', dirname($_SERVER['SCRIPT_FILENAME']));
 }
 $page = htmlspecialchars($_GET['page'] ?? 'home', ENT_QUOTES, 'UTF-8');
+
+function isCurrentPage($path) {
+    $currentPage = basename($_SERVER['PHP_SELF']);
+    return $currentPage === $path;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
