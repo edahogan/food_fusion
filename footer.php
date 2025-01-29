@@ -1,3 +1,4 @@
+<?php if (!defined('EXCLUDE_FOOTER')): ?>
     </main>
     <footer class="bg-neutral-900 text-white">
         <div class="container mx-auto px-4 py-12">
@@ -44,3 +45,4 @@
     </div>
 </body>
 </html>
+<?php endif; ?>

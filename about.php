@@ -25,36 +25,42 @@ require_once('header.php');
 
 <!-- Mission Section with Golden Ratio -->
 <section class="py-24 bg-white">
-    <div class="container mx-auto golden-padding">
-        <div class="grid grid-cols-1 lg:grid-cols-golden golden-gap items-center">
-            <!-- Content (Golden Ratio: 1) -->
-            <div class="space-y-6 opacity-0 translate-y-8 golden-padding" data-aos="fade-up">
-                <h2 class="text-4xl font-display font-bold text-neutral-900">Our Mission</h2>
-                <p class="text-lg text-neutral-600 leading-relaxed">
-                    At FoodFusion, we believe that great food has the power to bring people together and create lasting memories. Our mission is to inspire home cooks and food enthusiasts to explore the world of culinary arts, share their passion, and create extraordinary dishes that delight the senses.
-                </p>
-                <div class="flex flex-wrap gap-4 pt-4">
-                    <div class="flex items-center space-x-3 bg-neutral-50 p-4 rounded-xl">
-                        <span class="text-4xl">🌟</span>
-                        <div>
-                            <h3 class="font-bold text-neutral-900">Quality First</h3>
-                            <p class="text-sm text-neutral-600">Only the finest ingredients</p>
+    <div class="container mx-auto golden-padding relative overflow-hidden rounded-2xl">
+        <!-- Background Image -->
+        <div class="absolute inset-0">
+            <img src="https://tse3.mm.bing.net/th?id=OIP.SEoh2E4RMgBSMB34UHjfwAHaHa&pid=Api"
+                 alt="Background"
+                 class="w-full h-full object-cover"
+                 loading="lazy">
+            <div class="absolute inset-0 bg-black/70"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-golden golden-gap items-center">
+                <!-- Content (Golden Ratio: 1) -->
+                <div class="space-y-6 opacity-0 translate-y-8 golden-padding" data-aos="fade-up">
+                    <h2 class="text-4xl font-display font-bold text-white">Our Mission</h2>
+                    <p class="text-lg text-white leading-relaxed">
+                        At FoodFusion, we believe that great food has the power to bring people together and create lasting memories. Our mission is to inspire home cooks and food enthusiasts to explore the world of culinary arts, share their passion, and create extraordinary dishes that delight the senses.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <div class="flex items-center space-x-3 bg-black/80 backdrop-blur-sm p-4 rounded-xl">
+                            <span class="text-4xl">🌟</span>
+                            <div>
+                                <h3 class="font-bold text-white">Quality First</h3>
+                                <p class="text-sm text-white">Only the finest ingredients</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center space-x-3 bg-neutral-50 p-4 rounded-xl">
-                        <span class="text-4xl">🌍</span>
-                        <div>
-                            <h3 class="font-bold text-neutral-900">Global Cuisine</h3>
-                            <p class="text-sm text-neutral-600">Flavors from around the world</p>
+                        <div class="flex items-center space-x-3 bg-black/80 backdrop-blur-sm p-4 rounded-xl">
+                            <span class="text-4xl">🌍</span>
+                            <div>
+                                <h3 class="font-bold text-white">Global Cuisine</h3>
+                                <p class="text-sm text-white">Flavors from around the world</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Image (Golden Ratio: 0.618) -->
-            <div class="lg:pl-12 opacity-0 translate-y-8 golden-aspect max-w-md mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <img src="https://tse3.mm.bing.net/th?id=OIP.SEoh2E4RMgBSMB34UHjfwAHaHa&pid=Api"
-                     alt="Colorful Food"
-                     class="w-full rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500">
             </div>
         </div>
     </div>
@@ -163,7 +169,7 @@ require_once('header.php');
                 Be part of our growing community and discover the joy of cooking with FoodFusion.
             </p>
             <a href="#" class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-900 bg-white hover:bg-neutral-100 rounded-xl transition-colors duration-300 transform hover:scale-105">
-                Start Cooking Today
+                Join Now
             </a>
         </div>
     </div>
@@ -227,3 +233,5 @@ require_once('header.php');
         aspect-ratio: 1.618;
     }
 </style>
+
+<?php include 'footer.php'; ?>

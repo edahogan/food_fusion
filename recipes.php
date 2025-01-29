@@ -259,3 +259,5 @@ document.addEventListener('DOMContentLoaded', function() {
     updateRecipes();
 });
 </script>
+
+<?php require_once 'footer.php'; ?>

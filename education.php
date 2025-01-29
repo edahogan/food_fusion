@@ -176,5 +176,9 @@
             });
         });
     </script>
+
+    </main>
+
+    <?php require_once($_SERVER['DOCUMENT_ROOT'].'/food_fusion/footer.php'); ?>
 </body>
 </html>

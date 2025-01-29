@@ -112,6 +112,7 @@ try {
         </div>
     <?php endif; ?>
 </div>
+</main>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -221,12 +222,4 @@ function formatDate(dateString) {
 }
 </script>
 
-<?php
-} catch (Exception $e) {
-    error_log("Error in post.php: " . $e->getMessage());
-    header('Location: community.php');
-    exit;
-}
-
-require_once 'footer.php';
-?> 
+<?php require_once 'footer.php'; ?> 

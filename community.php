@@ -49,32 +49,34 @@ require_once 'header.php';
     <div id="posts-container" class="space-y-6">
         <!-- Posts will be loaded here dynamically -->
     </div>
+</main>
 
-    <!-- Reply Modal -->
-    <div id="reply-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
-            <h3 class="text-lg font-semibold mb-4">Reply to Post</h3>
-            <form id="reply-form" class="space-y-4">
-                <input type="hidden" id="parent-post-id" name="parent_post_id">
-                <textarea 
-                    id="reply-content" 
-                    name="content" 
-                    rows="3" 
-                    class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    required
-                ></textarea>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="closeReplyModal()" class="px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
-                        Reply
-                    </button>
-                </div>
-            </form>
-        </div>
+<!-- Reply Modal -->
+<div id="reply-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
+        <h3 class="text-lg font-semibold mb-4">Reply to Post</h3>
+        <form id="reply-form" class="space-y-4">
+            <input type="hidden" id="parent-post-id" name="parent_post_id">
+            <textarea 
+                id="reply-content" 
+                name="content" 
+                rows="3" 
+                class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                required
+            ></textarea>
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="closeReplyModal()" class="px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                    Reply
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+<?php require_once 'footer.php'; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

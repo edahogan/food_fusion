@@ -13,7 +13,7 @@
         <div class="max-w-4xl px-6 bg-black/40 p-8 rounded-xl backdrop-blur-sm">
             <h1 class="text-5xl md:text-6xl font-display font-bold text-white mb-6">Welcome to FoodFusion</h1>
             <p class="text-xl md:text-2xl text-white/90 mb-8">Discover a world of culinary delights and connect with food enthusiasts from around the globe.</p>
-            <a href="#featured-recipes" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+            <a href="recipes.php" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
                 Explore Recipes
             </a>
         </div>
@@ -111,61 +111,86 @@
     </div>
 </section>
 
-<!-- Featured Recipes Grid using Golden Ratio -->
+<!-- Featured Recipes Grid -->
 <section id="featured-recipes" class="py-24 bg-neutral-50">
     <div class="container mx-auto px-4">
         <h2 class="text-4xl font-display font-bold text-neutral-900 mb-12 text-center">Featured Recipes</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Recipe Card 1 -->
-            <div class="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                <img src="https://images.pexels.com/photos/5175537/pexels-photo-5175537.jpeg?auto=compress&cs=tinysrgb&w=640" 
-                     srcset="https://images.pexels.com/photos/5175537/pexels-photo-5175537.jpeg?auto=compress&cs=tinysrgb&w=640 640w,
-                             https://images.pexels.com/photos/5175537/pexels-photo-5175537.jpeg?auto=compress&cs=tinysrgb&w=1280 1280w"
-                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                     alt="Ravioli with Tomato Sauce" 
-                     class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
-                     loading="lazy"
-                     decoding="async">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="text-xl font-bold mb-2">Homemade Ravioli</h3>
-                    <p class="text-sm text-white/90">Classic Italian pasta filled with ricotta and spinach</p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <?php
+            // Fetch featured recipes from database
+            try {
+                $pdo = getConnection();
+                $stmt = $pdo->prepare("
+                    SELECT r.*, 
+                           u.FirstName, 
+                           u.LastName,
+                           ci.ImageURL as PrimaryImage
+                    FROM Recipes r
+                    LEFT JOIN Users u ON r.UserID = u.UserID
+                    LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+                        AND ci.IsPrimary = 1 
+                        AND ci.ContentType = 'recipe'
+                    WHERE r.IsDeleted = 0
+                    LIMIT 3
+                ");
+                $stmt->execute();
+                $featuredRecipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            <!-- Recipe Card 2 -->
-            <div class="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                <img src="https://images.pexels.com/photos/2664216/pexels-photo-2664216.jpeg?auto=compress&cs=tinysrgb&w=640" 
-                     srcset="https://images.pexels.com/photos/2664216/pexels-photo-2664216.jpeg?auto=compress&cs=tinysrgb&w=640 640w,
-                             https://images.pexels.com/photos/2664216/pexels-photo-2664216.jpeg?auto=compress&cs=tinysrgb&w=1280 1280w"
-                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                     alt="Spring Rolls" 
-                     class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
-                     loading="lazy"
-                     decoding="async">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="text-xl font-bold mb-2">Fresh Spring Rolls</h3>
-                    <p class="text-sm text-white/90">Vietnamese-style rolls with vegetables and herbs</p>
-                </div>
-            </div>
+                foreach ($featuredRecipes as $recipe) {
+                    $primaryImage = !empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+                    ?>
+                    <div class="recipe-card group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">
+                        <!-- Primary Image -->
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            <img src="<?= htmlspecialchars($primaryImage) ?>" 
+                                 alt="<?= htmlspecialchars($recipe['Title']) ?>" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                 loading="lazy"
+                                 decoding="async">
+                        </div>
 
-            <!-- Recipe Card 3 -->
-            <div class="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2">
-                <img src="https://img.freepik.com/free-photo/chicken-fajita-chicken-fillet-fried-with-bell-pepper-lavash-with-bread-slices-white-plate_1150-21760.jpg?w=640&q=80" 
-                     srcset="https://img.freepik.com/free-photo/chicken-fajita-chicken-fillet-fried-with-bell-pepper-lavash-with-bread-slices-white-plate_1150-21760.jpg?w=640&q=80 640w,
-                             https://img.freepik.com/free-photo/chicken-fajita-chicken-fillet-fried-with-bell-pepper-lavash-with-bread-slices-white-plate_1150-21760.jpg?w=1280&q=80 1280w"
-                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                     alt="Chicken Fajitas" 
-                     class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
-                     loading="lazy"
-                     decoding="async">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="text-xl font-bold mb-2">Sizzling Chicken Fajitas</h3>
-                    <p class="text-sm text-white/90">Mexican-style fajitas with bell peppers and onions</p>
-                </div>
-            </div>
+                        <!-- Always Visible Recipe Info -->
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-neutral-900 mb-2"><?= htmlspecialchars($recipe['Title']) ?></h3>
+                            <div class="flex items-center gap-3 text-sm text-neutral-600 mb-3">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <?= htmlspecialchars($recipe['TotalTime']) ?> mins
+                                </span>
+                                <span>·</span>
+                                <span><?= htmlspecialchars($recipe['Difficulty']) ?></span>
+                                <span>·</span>
+                                <span><?= htmlspecialchars($recipe['Cuisine']) ?></span>
+                            </div>
+                        </div>
+
+                        <!-- Hover Recipe Details -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                <p class="text-sm text-white/90 mb-4"><?= htmlspecialchars($recipe['Description']) ?></p>
+                                <?php if (!empty($recipe['DietaryPreference']) && $recipe['DietaryPreference'] !== 'None'): ?>
+                                <span class="inline-block px-2 py-1 text-xs font-medium bg-primary-500/80 rounded-full">
+                                    <?= htmlspecialchars($recipe['DietaryPreference']) ?>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Link to full recipe -->
+                        <a href="recipe.php?id=<?= $recipe['RecipeID'] ?>" class="absolute inset-0" aria-label="View recipe"></a>
+                    </div>
+                    <?php
+                }
+            } catch (PDOException $e) {
+                error_log("Database Error: " . $e->getMessage());
+                // Show a graceful fallback message if there's an error
+                echo '<div class="col-span-3 text-center py-12">';
+                echo '<p class="text-neutral-600">Unable to load featured recipes at this time.</p>';
+                echo '</div>';
+            }
+            ?>
         </div>
     </div>
 </section>
@@ -188,7 +213,7 @@
         <div class="bg-black/40 p-8 rounded-xl backdrop-blur-sm inline-block">
             <h2 class="text-4xl font-display font-bold text-white mb-8">Fresh Ingredients Matter</h2>
             <p class="text-xl text-white/90 max-w-2xl mx-auto mb-12">We believe in using only the finest, freshest ingredients to create extraordinary dishes that delight the senses.</p>
-            <a href="#" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-primary-600 bg-white hover:bg-neutral-100 rounded-lg transition-colors">
+            <a href="about.php" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-primary-600 bg-white hover:bg-neutral-100 rounded-lg transition-colors">
                 Learn More
             </a>
         </div>
@@ -200,55 +225,87 @@
     <div class="container mx-auto px-4">
         <h2 class="text-4xl font-display font-bold text-neutral-900 mb-12 text-center">Latest Recipes</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Main Recipe (Golden Ratio: 1.618) -->
-            <div class="md:col-span-2 group relative overflow-hidden rounded-xl shadow-lg">
-                <img src="https://img.freepik.com/free-photo/fried-chicken-breast-with-vegetables_1339-7824.jpg?w=960&q=80" 
-                     srcset="https://img.freepik.com/free-photo/fried-chicken-breast-with-vegetables_1339-7824.jpg?w=960&q=80 960w,
-                             https://img.freepik.com/free-photo/fried-chicken-breast-with-vegetables_1339-7824.jpg?w=1440&q=80 1440w"
-                     sizes="(max-width: 768px) 100vw, 66vw"
-                     alt="Fried Chicken Breast" 
-                     class="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105"
-                     loading="lazy"
-                     decoding="async">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-8">
-                    <h3 class="text-2xl font-bold text-white mb-3">Pan-Seared Chicken Breast</h3>
-                    <p class="text-white/90">Perfectly seasoned chicken breast with roasted vegetables</p>
-                </div>
-            </div>
-            <!-- Side Recipes -->
-            <div class="space-y-8">
-                <div class="group relative overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://img.freepik.com/free-photo/tasty-noodles-wrapped-around-fork_23-2148726890.jpg?w=640&q=80" 
-                         srcset="https://img.freepik.com/free-photo/tasty-noodles-wrapped-around-fork_23-2148726890.jpg?w=640&q=80 640w,
-                                 https://img.freepik.com/free-photo/tasty-noodles-wrapped-around-fork_23-2148726890.jpg?w=960&q=80 960w"
-                         sizes="(max-width: 768px) 100vw, 33vw"
-                         alt="Noodles" 
-                         class="w-full h-[235px] object-cover transition-transform duration-500 group-hover:scale-105"
-                         loading="lazy"
-                         decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Asian Noodle Bowl</h3>
-                        <p class="text-sm text-white/90">Savory noodles with fresh vegetables</p>
+            <?php
+            try {
+                $pdo = getConnection();
+                // Fetch latest recipes, including the primary recipe
+                $stmt = $pdo->prepare("
+                    SELECT r.*, 
+                           u.FirstName, 
+                           u.LastName,
+                           ci.ImageURL as PrimaryImage
+                    FROM Recipes r
+                    LEFT JOIN Users u ON r.UserID = u.UserID
+                    LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+                        AND ci.IsPrimary = 1 
+                        AND ci.ContentType = 'recipe'
+                    WHERE r.IsDeleted = 0
+                    ORDER BY r.CreatedAt DESC
+                    LIMIT 3
+                ");
+                $stmt->execute();
+                $latestRecipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if (!empty($latestRecipes)) {
+                    // Display the first recipe in the larger grid space
+                    $mainRecipe = $latestRecipes[0];
+                    $mainImage = !empty($mainRecipe['PrimaryImage']) ? $mainRecipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+                    ?>
+                    <!-- Main Recipe (Golden Ratio: 1.618) -->
+                    <div class="md:col-span-2 group relative overflow-hidden rounded-xl shadow-lg">
+                        <img src="<?= htmlspecialchars($mainImage) ?>" 
+                             alt="<?= htmlspecialchars($mainRecipe['Title']) ?>" 
+                             class="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105"
+                             loading="lazy"
+                             decoding="async">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8">
+                            <h3 class="text-2xl font-bold text-white mb-3"><?= htmlspecialchars($mainRecipe['Title']) ?></h3>
+                            <p class="text-white/90"><?= htmlspecialchars($mainRecipe['Description']) ?></p>
+                        </div>
+                        <a href="recipe.php?id=<?= $mainRecipe['RecipeID'] ?>" class="absolute inset-0" aria-label="View recipe"></a>
                     </div>
-                </div>
-                <div class="group relative overflow-hidden rounded-xl shadow-lg">
-                    <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=800" 
-                         srcset="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=800 800w,
-                                 https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=1280 1280w"
-                         sizes="(max-width: 768px) 100vw, 33vw"
-                         alt="Fresh Vegetables" 
-                         class="w-full h-[235px] object-cover transition-transform duration-500 group-hover:scale-105"
-                         loading="lazy"
-                         decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Garden Fresh Salad</h3>
-                        <p class="text-sm text-white/90">Colorful mix of seasonal vegetables</p>
+
+                    <!-- Side Recipes -->
+                    <div class="space-y-8">
+                        <?php
+                        // Display the next 2 recipes in smaller spaces
+                        for ($i = 1; $i < min(3, count($latestRecipes)); $i++) {
+                            $recipe = $latestRecipes[$i];
+                            $image = !empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+                            ?>
+                            <div class="group relative overflow-hidden rounded-xl shadow-lg">
+                                <img src="<?= htmlspecialchars($image) ?>" 
+                                     alt="<?= htmlspecialchars($recipe['Title']) ?>" 
+                                     class="w-full h-[235px] object-cover transition-transform duration-500 group-hover:scale-105"
+                                     loading="lazy"
+                                     decoding="async">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                                <div class="absolute bottom-0 left-0 right-0 p-6">
+                                    <h3 class="text-xl font-bold text-white mb-2"><?= htmlspecialchars($recipe['Title']) ?></h3>
+                                    <p class="text-sm text-white/90"><?= htmlspecialchars($recipe['Description']) ?></p>
+                                </div>
+                                <a href="recipe.php?id=<?= $recipe['RecipeID'] ?>" class="absolute inset-0" aria-label="View recipe"></a>
+                            </div>
+                            <?php
+                        }
+                        ?>
                     </div>
-                </div>
-            </div>
+                    <?php
+                } else {
+                    // Show a message if no recipes are found
+                    echo '<div class="col-span-3 text-center py-12">';
+                    echo '<p class="text-neutral-600">No recipes available at this time.</p>';
+                    echo '</div>';
+                }
+            } catch (PDOException $e) {
+                error_log("Database Error: " . $e->getMessage());
+                // Show a graceful fallback message if there's an error
+                echo '<div class="col-span-3 text-center py-12">';
+                echo '<p class="text-neutral-600">Unable to load latest recipes at this time.</p>';
+                echo '</div>';
+            }
+            ?>
         </div>
     </div>
 </section>
