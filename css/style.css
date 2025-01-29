@@ -6,7 +6,7 @@ body {
 }
 
 img {
-    border-radius: [8px, 8px, 8px, 8px];
+    border-radius: 8px;
 }
 
 header {
@@ -99,5 +99,3 @@ footer {
     top: 0;
     width: 100%;
 }
-
-/* Add more specific styles for different pages and components */
