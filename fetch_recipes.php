@@ -118,6 +118,14 @@ try {
 
             <!-- Link to full recipe -->
             <a href="recipe.php?id=<?= $recipe['RecipeID'] ?>" class="absolute inset-0" aria-label="View recipe"></a>
+
+            <!-- Add this button -->
+            <button onclick="downloadRecipe(<?= $recipe['RecipeID'] ?>, '<?= htmlspecialchars($recipe['Title']) ?>')"
+                    class="absolute top-4 right-4 p-2 bg-white/90 rounded-full shadow-lg hover:bg-white transition-colors z-20">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+            </button>
         </div>
         <?php
     }

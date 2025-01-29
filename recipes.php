@@ -260,4 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script src="assets/js/recipe-download.js"></script>
+
 <?php require_once 'footer.php'; ?>
