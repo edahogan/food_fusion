@@ -23,6 +23,7 @@ try {
     $content = trim($_POST['content'] ?? '');
     $recipe_id = intval($_POST['recipe_id'] ?? 0);
     $user_id = $_SESSION['user_id'];
+    $parent_comment_id = isset($_POST['parent_comment_id']) ? intval($_POST['parent_comment_id']) : null;
 
     // Validate data
     if (empty($content) || empty($recipe_id)) {
@@ -34,14 +35,15 @@ try {
 
     // Insert comment
     $stmt = $pdo->prepare("
-        INSERT INTO Comments (UserID, RecipeID, Content)
-        VALUES (:user_id, :recipe_id, :content)
+        INSERT INTO Comments (UserID, RecipeID, Content, parent_comment_id)
+        VALUES (:user_id, :recipe_id, :content, :parent_comment_id)
     ");
 
     $stmt->execute([
         'user_id' => $user_id,
         'recipe_id' => $recipe_id,
-        'content' => $content
+        'content' => $content,
+        'parent_comment_id' => $parent_comment_id
     ]);
 
     // Fetch the newly created comment with user info
@@ -61,7 +63,8 @@ try {
             'id' => $comment['CommentID'],
             'content' => $comment['Content'],
             'author' => $comment['FirstName'] . ' ' . $comment['LastName'],
-            'created_at' => date('M j, Y', strtotime($comment['CreatedAt']))
+            'created_at' => date('M j, Y', strtotime($comment['CreatedAt'])),
+            'parent_comment_id' => $comment['parent_comment_id']
         ]
     ]);
 
