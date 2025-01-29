@@ -147,6 +147,61 @@ try {
                     </button>
                 </div>
             <?php endif; ?>
+
+            <!-- Comments Section -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold mb-6">Comments</h2>
+                
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <!-- Comment Form -->
+                    <form id="comment-form" class="mb-8">
+                        <input type="hidden" name="recipe_id" value="<?= $recipe['RecipeID'] ?>">
+                        <div class="mb-4">
+                            <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Add a Comment</label>
+                            <textarea id="comment" 
+                                    name="content" 
+                                    rows="3" 
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                                    required></textarea>
+                        </div>
+                        <button type="submit" 
+                                class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                            Post Comment
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <p class="mb-8 text-gray-600">Please <a href="login.php" class="text-primary-600 hover:text-primary-700">log in</a> to leave a comment.</p>
+                <?php endif; ?>
+
+                <!-- Comments List -->
+                <div id="comments-list" class="space-y-6">
+                    <?php
+                    // Fetch comments for this recipe
+                    $commentStmt = $pdo->prepare("
+                        SELECT c.*, u.FirstName, u.LastName 
+                        FROM Comments c
+                        JOIN Users u ON c.UserID = u.UserID
+                        WHERE c.RecipeID = :recipe_id
+                        ORDER BY c.CreatedAt DESC
+                    ");
+                    $commentStmt->execute(['recipe_id' => $recipe['RecipeID']]);
+                    $comments = $commentStmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($comments as $comment): ?>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="font-medium text-gray-900">
+                                    <?= htmlspecialchars($comment['FirstName'] . ' ' . $comment['LastName']) ?>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    <?= date('M j, Y', strtotime($comment['CreatedAt'])) ?>
+                                </div>
+                            </div>
+                            <p class="text-gray-700"><?= htmlspecialchars($comment['Content']) ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -174,6 +229,48 @@ try {
             });
         }
     }
+
+    // Comment form submission
+    document.getElementById('comment-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch('submit_comment.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add new comment to the list
+                const commentsList = document.getElementById('comments-list');
+                const newComment = document.createElement('div');
+                newComment.className = 'bg-gray-50 p-4 rounded-lg';
+                newComment.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="font-medium text-gray-900">
+                            ${data.comment.author}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            ${data.comment.created_at}
+                        </div>
+                    </div>
+                    <p class="text-gray-700">${data.comment.content}</p>
+                `;
+                commentsList.insertBefore(newComment, commentsList.firstChild);
+                
+                // Clear the form
+                this.reset();
+            } else {
+                alert('Error posting comment: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error posting comment. Please try again.');
+        });
+    });
     </script>
 
 <?php
