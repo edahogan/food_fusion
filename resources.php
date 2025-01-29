@@ -46,16 +46,83 @@ if (file_exists($headerPath)) {
         <section id="recipe-cards" class="scroll-mt-24">
             <div class="grid grid-cols-1 md:grid-cols-golden gap-8">
                 <div class="space-y-6 order-2 md:order-1">
-                    <div class="group hover:scale-105 transition-transform duration-300">
-                        <div class="relative overflow-hidden rounded-xl aspect-golden">
-                            <img src="https://images.unsplash.com/photo-1506806732259-39c2d0268443" alt="Recipe Cards" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
+                    <h2 class="text-4xl font-bold text-gray-800">Recipe Cards</h2>
+                    <p class="text-lg text-gray-600">Download beautifully formatted recipe cards of our most popular dishes, perfect for building your personal cookbook or sharing with friends and family.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <?php
+                        try {
+                            require_once($_SERVER['DOCUMENT_ROOT'].'/food_fusion/db_connection.php');
+                            $pdo = getConnection();
+                            
+                            $stmt = $pdo->prepare("
+                                SELECT r.*, 
+                                       u.FirstName, 
+                                       u.LastName,
+                                       ci.ImageURL as PrimaryImage
+                                FROM Recipes r
+                                LEFT JOIN Users u ON r.UserID = u.UserID
+                                LEFT JOIN ContentImages ci ON r.RecipeID = ci.RecipeID 
+                                    AND ci.IsPrimary = 1 
+                                    AND ci.ContentType = 'recipe'
+                                WHERE r.IsDeleted = 0
+                                ORDER BY r.CreatedAt DESC
+                                LIMIT 3
+                            ");
+                            $stmt->execute();
+                            $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                            foreach ($recipes as $recipe) {
+                                $primaryImage = !empty($recipe['PrimaryImage']) ? $recipe['PrimaryImage'] : 'https://via.placeholder.com/800x600';
+                                ?>
+                                <div class="recipe-card group relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-1">
+                                    <!-- Primary Image -->
+                                    <div class="relative aspect-[4/3] overflow-hidden">
+                                        <img src="<?= htmlspecialchars($primaryImage) ?>" 
+                                             alt="<?= htmlspecialchars($recipe['Title']) ?>" 
+                                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                             loading="lazy"
+                                             decoding="async">
+                                    </div>
+
+                                    <!-- Recipe Info -->
+                                    <div class="p-4">
+                                        <h3 class="text-xl font-bold text-neutral-900 mb-2"><?= htmlspecialchars($recipe['Title']) ?></h3>
+                                        <div class="flex items-center gap-3 text-sm text-neutral-600 mb-3">
+                                            <span class="flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <?= htmlspecialchars($recipe['TotalTime']) ?> mins
+                                            </span>
+                                            <span>·</span>
+                                            <span><?= htmlspecialchars($recipe['Difficulty']) ?></span>
+                                        </div>
+
+                                        <!-- Download Button - Updated with relative positioning and higher z-index -->
+                                        <button onclick="downloadRecipeCard(event, <?= $recipe['RecipeID'] ?>, '<?= htmlspecialchars($recipe['Title']) ?>')"
+                                                class="relative z-20 w-full mt-2 inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                            </svg>
+                                            Download Recipe Card
+                                        </button>
+                                    </div>
+
+                                    <!-- Link to full recipe - Updated with lower z-index -->
+                                    <a href="recipe.php?id=<?= $recipe['RecipeID'] ?>" 
+                                       class="absolute inset-0 z-10" 
+                                       aria-label="View recipe"></a>
+                                </div>
+                                <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo '<div class="col-span-full text-center py-12">';
+                            echo '<p class="text-gray-600">Unable to load recipe cards at this time.</p>';
+                            echo '</div>';
+                        }
+                        ?>
                     </div>
-                </div>
-                <div class="space-y-6 order-1 md:order-2">
-                    <h2 class="text-4xl font-bold text-gray-800">Downloadable Recipe Cards</h2>
-                    <p class="text-lg text-gray-600">Access our collection of beautifully designed recipe cards, perfect for building your personal cookbook or sharing with friends and family.</p>
                 </div>
             </div>
         </section>
@@ -243,3 +310,19 @@ if (file_exists($headerPath)) {
         });
     });
 </script>
+
+<script>
+function downloadRecipeCard(event, recipeId, title) {
+    // Prevent the click from bubbling up to the recipe link
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Call the download function
+    downloadRecipe(recipeId, title);
+}
+</script>
+
+<!-- Add this before the footer -->
+<script src="assets/js/recipe-download.js"></script>
+
+<?php require_once 'footer.php'; ?>
