@@ -202,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </svg>
                     </div>
                     <h3 class="text-lg font-semibold mb-2">Email Us</h3>
-                    <p class="text-neutral-600">support@foodfusion.com</p>
+                    <p class="text-neutral-600">contact@foodfusion.com</p>
                 </div>
 
                 <div class="p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
