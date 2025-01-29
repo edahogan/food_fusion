@@ -1,5 +1,5 @@
 <!-- Hero Section with Parallax -->
-<section class="relative h-screen overflow-hidden">
+<section class="relative h-screen overflow-hidden rounded-xl">
     <div class="absolute inset-0">
         <img src="https://th.bing.com/th/id/OIG3.cUTd2t1EBzxaicope80r?w=1024&h=1024&rs=1&pid=ImgDetMain" 
              
@@ -9,8 +9,8 @@
              fetchpriority="high"
              loading="eager">
     </div>
-    <div class="relative h-full flex items-center justify-center text-center">
-        <div class="max-w-4xl px-6 bg-black/40 p-8 rounded-xl backdrop-blur-sm">
+    <div class="relative h-full flex bg-black/40 items-center justify-center text-center">
+        <div class="max-w-4xl px-6  p-8 rounded-xl backdrop-blur-sm">
             <h1 class="text-5xl md:text-6xl font-display font-bold text-white mb-6">Welcome to FoodFusion</h1>
             <p class="text-xl md:text-2xl text-white/90 mb-8">Discover a world of culinary delights and connect with food enthusiasts from around the globe.</p>
             <a href="recipes.php" class="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
