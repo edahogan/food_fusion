@@ -99,7 +99,7 @@ try {
                 <div class="mb-8 rounded-xl overflow-hidden">
                     <img src="<?= htmlspecialchars($primaryImage) ?>" 
                          alt="<?= htmlspecialchars($recipe['Title']) ?>"
-                         class="w-full h-[400px] object-cover">
+                         class="w-full <?= $isScreenshot ? 'max-h-[500px] object-contain' : 'h-[400px] object-cover' ?>">
                 </div>
 
                 <!-- Title and Author -->
