@@ -64,16 +64,16 @@ function isCurrentPage($path) {
             <div class="flex items-center justify-between">
                 <a href="<?php echo $rootPath; ?>/index.php" class="text-2xl font-display font-semibold text-neutral-900">FoodFusion</a>
                 <div class="hidden xl:flex items-center space-x-8">
-                    <a href="index.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Home</a>
-                    <a href="about.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">About Us</a>
-                    <a href="recipes.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Recipes</a>
-                    <a href="community.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Community</a>
-                    <a href="resources.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Resources</a>
-                    <a href="education.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Education</a>
-                    <a href="contact.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Contact</a>
+                    <a href="index.php" class="<?= isCurrentPage('index.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Home</a>
+                    <a href="about.php" class="<?= isCurrentPage('about.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">About Us</a>
+                    <a href="recipes.php" class="<?= isCurrentPage('recipes.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Recipes</a>
+                    <a href="community.php" class="<?= isCurrentPage('community.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Community</a>
+                    <a href="resources.php" class="<?= isCurrentPage('resources.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Resources</a>
+                    <a href="education.php" class="<?= isCurrentPage('education.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Education</a>
+                    <a href="contact.php" class="<?= isCurrentPage('contact.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Contact</a>
                     
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <a href="profile.php" class="text-neutral-600 hover:text-neutral-900 transition-colors">Profile</a>
+                        <a href="profile.php" class="<?= isCurrentPage('profile.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Profile</a>
                     <?php endif; ?>
                     
                     <?php if (isset($_SESSION['user_id'])): ?>
@@ -130,15 +130,15 @@ function isCurrentPage($path) {
             </div>
             <div class="hidden xl:hidden" id="mobile-menu">
                 <div class="pt-2 pb-4 space-y-1">
-                    <a href="index.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Home</a>
-                    <a href="about.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">About Us</a>
-                    <a href="recipes.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Recipes</a>
-                    <a href="community.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Community</a>
-                    <a href="resources.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Resources</a>
-                    <a href="education.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Education</a>
-                    <a href="contact.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Contact Us</a>
+                    <a href="index.php" class="block px-3 py-2 <?= isCurrentPage('index.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Home</a>
+                    <a href="about.php" class="block px-3 py-2 <?= isCurrentPage('about.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">About Us</a>
+                    <a href="recipes.php" class="block px-3 py-2 <?= isCurrentPage('recipes.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Recipes</a>
+                    <a href="community.php" class="block px-3 py-2 <?= isCurrentPage('community.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Community</a>
+                    <a href="resources.php" class="block px-3 py-2 <?= isCurrentPage('resources.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Resources</a>
+                    <a href="education.php" class="block px-3 py-2 <?= isCurrentPage('education.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Education</a>
+                    <a href="contact.php" class="block px-3 py-2 <?= isCurrentPage('contact.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Contact Us</a>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <a href="profile.php" class="block px-3 py-2 text-neutral-600 hover:text-neutral-900">Profile</a>
+                        <a href="profile.php" class="block px-3 py-2 <?= isCurrentPage('profile.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Profile</a>
                         <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
                     <?php else: ?>
                         <button id="login-button-mobile" class="block w-full text-left px-3 py-2 text-primary-600 hover:text-primary-700 font-medium">Login</button>
