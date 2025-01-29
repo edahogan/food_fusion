@@ -66,19 +66,66 @@ if (file_exists($headerPath)) {
                 <div class="space-y-6">
                     <h2 class="text-4xl font-bold text-gray-800">Cooking Tutorials</h2>
                     <p class="text-lg text-gray-600">Step-by-step video guides and tutorials to help you master essential cooking techniques and create amazing dishes.</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="group hover:scale-105 transition-transform duration-300">
-                            <div class="relative overflow-hidden rounded-xl aspect-golden">
-                                <img src="https://images.unsplash.com/photo-1457296898342-cdd24585d095" alt="Cooking Tutorial 1" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </div>
-                        </div>
-                        <div class="group hover:scale-105 transition-transform duration-300">
-                            <div class="relative overflow-hidden rounded-xl aspect-golden">
-                                <img src="https://static.vecteezy.com/system/resources/previews/024/524/034/original/woman-cooking-food-free-png.png" alt="Cooking Tutorial 2" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <?php
+                        try {
+                            require_once($_SERVER['DOCUMENT_ROOT'].'/food_fusion/db_connection.php');
+                            $pdo = getConnection();
+                            
+                            $stmt = $pdo->prepare("
+                                SELECT * FROM Resources 
+                                WHERE type = 'cooking'
+                                ORDER BY title ASC
+                            ");
+                            $stmt->execute();
+                            $tutorials = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                            foreach ($tutorials as $tutorial) {
+                                ?>
+                                <div class="resource-card group relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-1">
+                                    <!-- Thumbnail -->
+                                    <div class="relative aspect-video overflow-hidden bg-neutral-800">
+                                        <!-- Download button overlay -->
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Content -->
+                                    <div class="p-6">
+                                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                            <?= htmlspecialchars($tutorial['title']) ?>
+                                        </h3>
+                                        <div class="relative">
+                                            <p class="text-gray-600 line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                                                <?= htmlspecialchars($tutorial['description']) ?>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Resource Type Badge -->
+                                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                        Video
+                                    </div>
+
+                                    <!-- Download link -->
+                                    <a href="download_resource.php?id=<?= $tutorial['ResourceID'] ?>"
+                                       class="absolute inset-0 z-10" 
+                                       aria-label="Download <?= htmlspecialchars($tutorial['title']) ?>">
+                                    </a>
+                                </div>
+                                <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo '<div class="col-span-full text-center py-12">';
+                            echo '<p class="text-gray-600">Unable to load cooking tutorials at this time.</p>';
+                            echo '</div>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -92,36 +139,71 @@ if (file_exists($headerPath)) {
                     <p class="text-lg text-gray-600 mt-4">Discover time-saving tips and clever tricks to make your time in the kitchen more efficient and enjoyable.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="group hover:scale-105 transition-transform duration-300">
-                        <div class="relative overflow-hidden rounded-xl aspect-square">
-                            <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e" alt="Kitchen Hack 1" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute bottom-4 left-4 text-white">
-                                    <h3 class="text-xl font-semibold">Organization Tips</h3>
+                    <?php
+                    try {
+                        $stmt = $pdo->prepare("
+                            SELECT * FROM Resources 
+                            WHERE type = 'info'
+                            ORDER BY title ASC
+                        ");
+                        $stmt->execute();
+                        $hacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($hacks as $hack) {
+                            ?>
+                            <div class="resource-card group relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-1">
+                                <!-- Thumbnail -->
+                                <div class="relative aspect-square overflow-hidden bg-neutral-800">
+                                    <?php if ($hack['media'] === 'video'): ?>
+                                        <!-- Download button overlay -->
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <img 
+                                            src="<?= htmlspecialchars($hack['url']) ?>" 
+                                            alt="<?= htmlspecialchars($hack['title']) ?>"
+                                            class="w-full h-full object-cover"
+                                        >
+                                    <?php endif; ?>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="group hover:scale-105 transition-transform duration-300">
-                        <div class="relative overflow-hidden rounded-xl aspect-square">
-                            <img src="https://th.bing.com/th/id/OIP.cL1i1wNRcoMJXhI7qUtu4AHaHa?rs=1&pid=ImgDetMain" alt="Kitchen Hack 2" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute bottom-4 left-4 text-white">
-                                    <h3 class="text-xl font-semibold">Time-Saving Tricks</h3>
+
+                                <!-- Content -->
+                                <div class="p-6">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                        <?= htmlspecialchars($hack['title']) ?>
+                                    </h3>
+                                    <div class="relative">
+                                        <p class="text-gray-600 line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                                            <?= htmlspecialchars($hack['description']) ?>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="group hover:scale-105 transition-transform duration-300">
-                        <div class="relative overflow-hidden rounded-xl aspect-square">
-                            <img src="https://images.unsplash.com/photo-1510627498534-cf7e9002facc" alt="Kitchen Hack 3" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute bottom-4 left-4 text-white">
-                                    <h3 class="text-xl font-semibold">Smart Solutions</h3>
+
+                                <!-- Resource Type Badge -->
+                                <div class="absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium 
+                                    <?= $hack['media'] === 'video' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' ?>">
+                                    <?= ucfirst($hack['media']) ?>
                                 </div>
+
+                                <!-- Download link -->
+                                <a href="download_resource.php?id=<?= $hack['ResourceID'] ?>"
+                                   class="absolute inset-0 z-10" 
+                                   aria-label="Download <?= htmlspecialchars($hack['title']) ?>">
+                                </a>
                             </div>
-                        </div>
-                    </div>
+                            <?php
+                        }
+                    } catch (PDOException $e) {
+                        echo '<div class="col-span-full text-center py-12">';
+                        echo '<p class="text-gray-600">Unable to load kitchen hacks at this time.</p>';
+                        echo '</div>';
+                    }
+                    ?>
                 </div>
             </div>
         </section>

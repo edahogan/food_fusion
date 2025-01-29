@@ -21,4 +21,12 @@ INSERT INTO Resources (
     'Kitchen Tips and Tricks - Episode 37',
     'https://archive.org/download/youtube-gxQS_J8Fc80/gxQS_J8Fc80.mp4',
     'Helpful kitchen tips and tricks to improve your cooking efficiency and food preparation skills.'
-); 
+);
+
+UPDATE Resources 
+SET type = 'cooking'
+WHERE ResourceID = 8;
+
+UPDATE Resources 
+SET type = 'info'
+WHERE ResourceID = 9; 
