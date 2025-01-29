@@ -240,7 +240,10 @@ $(document).ready(function() {
     };
 
     // Show cookie notice if no preferences are set
-    if (!localStorage.getItem('cookiesAccepted')) {
+    if (window.location.pathname === '/' || 
+        window.location.pathname === '/index.php' ||
+        window.location.pathname.endsWith('/food_fusion/') ||
+        window.location.pathname.endsWith('/food_fusion/index.php')) {
         $('#cookie-notice').fadeIn();
     }
 
