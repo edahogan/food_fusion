@@ -1,6 +1,7 @@
 <?php
 $page = 'about';
 require_once('header.php');
+require_once 'modals.php';
 ?>
 
 <!-- Hero Section with Parallax -->
@@ -155,7 +156,7 @@ require_once('header.php');
 </section>
 
 <!-- Call to Action -->
-<section class="relative golden-height overflow-hidden bg-primary-900 py-32 pb-40 rounded-2xl">
+<section class="relative min-h-[calc(100vh*0.5)] md:min-h-[calc(100vh*0.618)] overflow-hidden bg-primary-900 py-24 md:py-32 rounded-2xl">
     <div class="absolute inset-0 opacity-20">
         <img src="https://tse3.mm.bing.net/th?id=OIP.BsG_5TJXwfJu7spDQS3O_gHaLG&pid=Api"
              alt="Background Pattern"
@@ -169,6 +170,7 @@ require_once('header.php');
                 Be part of our growing community and discover the joy of cooking with FoodFusion.
             </p>
             <button type="button" 
+                id="join-now-button"
                 data-modal-target="register-modal" 
                 data-modal-toggle="register-modal" 
                 class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-primary-900 bg-white hover:bg-neutral-100 rounded-xl transition-colors duration-300 transform hover:scale-105">
@@ -187,6 +189,14 @@ require_once('header.php');
             duration: 1000,
             once: true,
             offset: 100
+        });
+
+        // Handle Join Now button click
+        document.getElementById('join-now-button')?.addEventListener('click', function() {
+            const registerModal = document.getElementById('register-modal');
+            if (registerModal && window.modals && window.modals.register) {
+                window.modals.register.show();
+            }
         });
     });
 </script>
