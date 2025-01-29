@@ -1,50 +1,11 @@
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+// Remove all the duplicate login popup styles since they're handled by Tailwind
+// Delete lines 1-22 which contain:
+// .popup-overlay
+// .popup-content 
+// .close-popup
+// .form-group
+// .form-group label
+// .form-group input
+// #loginMessage
 
-.popup-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-}
-
-.close-popup {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-#loginMessage {
-    margin-top: 10px;
-    color: #ff0000;
-} 
+// Keep the rest of the file's contents 
