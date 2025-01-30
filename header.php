@@ -12,6 +12,10 @@ function isCurrentPage($path) {
     $currentPage = basename($_SERVER['PHP_SELF']);
     return $currentPage === $path;
 }
+
+function isLoggedIn() {
+    return isset($_SESSION['user_id']) && isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -72,15 +76,15 @@ function isCurrentPage($path) {
                     <a href="education.php" class="<?= isCurrentPage('education.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Education</a>
                     <a href="contact.php" class="<?= isCurrentPage('contact.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Contact</a>
                     
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isLoggedIn()): ?>
                         <a href="profile.php" class="<?= isCurrentPage('profile.php') ? 'text-primary-600' : 'text-neutral-600 hover:text-neutral-900' ?> transition-colors">Profile</a>
                     <?php endif; ?>
                     
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isLoggedIn()): ?>
                         <!-- User Menu Dropdown -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-2 text-neutral-600 hover:text-neutral-900">
-                                <span>My Account</span>
+                                <span><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
@@ -137,7 +141,7 @@ function isCurrentPage($path) {
                     <a href="resources.php" class="block px-3 py-2 <?= isCurrentPage('resources.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Resources</a>
                     <a href="education.php" class="block px-3 py-2 <?= isCurrentPage('education.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Education</a>
                     <a href="contact.php" class="block px-3 py-2 <?= isCurrentPage('contact.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Contact Us</a>
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isLoggedIn()): ?>
                         <a href="profile.php" class="block px-3 py-2 <?= isCurrentPage('profile.php') ? 'text-primary-600 bg-primary-50' : 'text-neutral-600 hover:text-neutral-900' ?>">Profile</a>
                         <a href="logout.php" class="block px-3 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg">Logout</a>
                     <?php else: ?>

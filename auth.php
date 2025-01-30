@@ -32,9 +32,27 @@ function loginUser($email, $password) {
     try {
         $conn = getConnection();
         
-        $stmt = $conn->prepare("SELECT UserID, Password, FailedAttempts, LockoutTime FROM Users WHERE Email = ?");
+        $stmt = $conn->prepare("SELECT UserID, Password, FailedAttempts, LockoutTime, FirstName, LastName FROM Users WHERE Email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
+        
+        if ($user && password_verify($password, $user['Password'])) {
+            // Reset failed attempts on successful login
+            $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = 0, LockoutTime = NULL WHERE UserID = ?");
+            $stmt->execute([$user['UserID']]);
+            
+            // Start session if not already started
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            
+            // Store user data in session
+            $_SESSION['user_id'] = $user['UserID'];
+            $_SESSION['user_name'] = $user['FirstName'] . ' ' . $user['LastName'];
+            $_SESSION['logged_in'] = true;
+            
+            return "success";
+        }
         
         if ($user) {
             // Check if account is locked
@@ -50,32 +68,18 @@ function loginUser($email, $password) {
                 }
             }
             
-            if (password_verify($password, $user['Password'])) {
-                // Reset failed attempts on successful login
-                $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = 0, LockoutTime = NULL WHERE UserID = ?");
-                $stmt->execute([$user['UserID']]);
-                
-                // Start session if not already started
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                
-                $_SESSION['user_id'] = $user['UserID'];
-                return "success";
+            // Increment failed attempts
+            $failedAttempts = $user['FailedAttempts'] + 1;
+            $lockoutTime = ($failedAttempts >= 3) ? date('Y-m-d H:i:s', strtotime('+15 minutes')) : null;
+            
+            $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ?, LockoutTime = ? WHERE UserID = ?");
+            $stmt->execute([$failedAttempts, $lockoutTime, $user['UserID']]);
+            
+            if ($failedAttempts >= 3) {
+                return "Account locked for 15 minutes due to multiple failed attempts.";
             } else {
-                // Increment failed attempts
-                $failedAttempts = $user['FailedAttempts'] + 1;
-                $lockoutTime = ($failedAttempts >= 3) ? date('Y-m-d H:i:s', strtotime('+15 minutes')) : null;
-                
-                $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ?, LockoutTime = ? WHERE UserID = ?");
-                $stmt->execute([$failedAttempts, $lockoutTime, $user['UserID']]);
-                
-                if ($failedAttempts >= 3) {
-                    return "Account locked for 15 minutes due to multiple failed attempts.";
-                } else {
-                    $remainingAttempts = 3 - $failedAttempts;
-                    return "Invalid password. {$remainingAttempts} attempt(s) remaining before account lockout.";
-                }
+                $remainingAttempts = 3 - $failedAttempts;
+                return "Invalid password. {$remainingAttempts} attempt(s) remaining before account lockout.";
             }
         }
         return "Invalid email or password.";

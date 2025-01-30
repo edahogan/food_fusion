@@ -3,10 +3,16 @@ require_once 'db_connection.php';
 
 try {
     $pdo = getConnection();
-    $where = [];
+    $where = ["r.IsDeleted = 0"];
     $params = [];
 
-    // Add filters if provided
+    // Add user filter if provided
+    if (!empty($_GET['u'])) {
+        $where[] = "r.UserID = :user_id";
+        $params['user_id'] = intval($_GET['u']);
+    }
+
+    // Add other filters if provided
     if (!empty($_GET['cuisine'])) {
         $where[] = "r.Cuisine = :cuisine";
         $params['cuisine'] = $_GET['cuisine'];

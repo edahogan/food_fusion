@@ -36,7 +36,7 @@ if ($userIdFilter) {
 }
 
 // Modify the query to filter recipes by user ID if "u" is specified
-$whereClause = $userIdFilter ? "WHERE r.UserID = :user_id" : "";
+$whereClause = $userIdFilter ? "WHERE r.UserID = :user_id AND r.IsDeleted = 0" : "WHERE r.IsDeleted = 0";
 $query = "
     SELECT r.*, 
            u.FirstName, 
@@ -178,6 +178,12 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Recipe cards will be loaded here -->
 </div>
 
+<?php if ($userIdFilter): ?>
+<script>
+    const currentUserFilter = <?php echo $userIdFilter; ?>;
+</script>
+<?php endif; ?>
+
 <script>
 // Initialize filters object in global scope
 const filters = {
@@ -191,10 +197,16 @@ function updateRecipes() {
     const recipeList = document.getElementById('recipe-list');
     recipeList.classList.add('opacity-50');
 
-    const queryString = Object.entries(filters)
+    let queryParams = Object.entries(filters)
         .filter(([_, value]) => value !== '')
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-        .join('&');
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
+    
+    // Add user filter if it exists
+    if (typeof currentUserFilter !== 'undefined') {
+        queryParams.push(`u=${currentUserFilter}`);
+    }
+
+    const queryString = queryParams.join('&');
 
     // Fetch filtered recipes
     fetch(`fetch_recipes.php${queryString ? '?' + queryString : ''}`)

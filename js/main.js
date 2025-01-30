@@ -300,4 +300,30 @@ $(document).ready(function() {
     $('#mobile-menu').click(function(e) {
         e.stopPropagation();
     });
+
+    // Update the login form submission handler
+    $('#login-form').submit(function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: 'auth.php',
+            method: 'POST',
+            data: {
+                action: 'login',
+                email: $('#login-email').val(),
+                password: $('#login-password').val()
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Reload the page to update the UI
+                    window.location.reload();
+                } else {
+                    $('#login-message').text(response.message);
+                }
+            },
+            error: function() {
+                $('#login-message').text('An error occurred. Please try again.');
+            }
+        });
+    });
 });

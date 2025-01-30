@@ -3,9 +3,9 @@ session_start();
 require_once 'db_connection.php';
 require_once 'header.php';
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+// Ensure user is logged in using the new function
+if (!isLoggedIn()) {
+    header('Location: index.php');
     exit;
 }
 
@@ -91,6 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </div>
     </form>
+</div>
+
+<div class="text-center py-12 bg-neutral-50 rounded-lg">
+    <h3 class="text-xl font-semibold text-neutral-700 mb-4">Profile Navigation</h3>
+    <div class="flex flex-col space-y-4">
+        <a href="recipes.php?u=<?= $_SESSION['user_id'] ?>" 
+           class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            My Recipes
+        </a>
+        <!-- ... other navigation links ... -->
+    </div>
 </div>
 
 <?php require_once 'footer.php'; ?> 
