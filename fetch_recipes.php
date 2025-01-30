@@ -50,9 +50,17 @@ try {
     if (empty($recipes)) {
         echo '<div class="col-span-full text-center py-12">';
         echo '<div class="max-w-md mx-auto space-y-4">';
-        echo '<p class="text-2xl font-semibold text-neutral-700">No recipes found</p>';
+        
+        // Different message when filtering by user
+        if (!empty($_GET['u'])) {
+            echo '<p class="text-2xl font-semibold text-neutral-700">This user has no recipes that satisfy the current filters</p>';
+        } else {
+            echo '<p class="text-2xl font-semibold text-neutral-700">No recipes found</p>';
+        }
+        
         echo '<p class="text-neutral-600">Try adjusting your filters to find more recipes.</p>';
-        echo '<button onclick="resetFilters()" class="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">';
+        echo '<button onclick="resetFilters()" ';
+        echo 'class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">';
         echo 'Reset Filters';
         echo '</button>';
         echo '</div>';
