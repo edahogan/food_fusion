@@ -8,19 +8,8 @@ ini_set('display_errors', 1);
 
 if (!isset($_GET['id'])) {
     error_log("No recipe ID provided");
-    header('Location: pages/recipes.php');
+    header('Location: recipes.php');
     exit;
-}
-
-// Add this near the top of the file, after the session checks
-if (isset($_GET['screenshot'])) {
-    // Only output the main content for screenshots
-    $isScreenshot = true;
-    // Don't include header/footer for screenshots
-    ob_start();
-} else {
-    $isScreenshot = false;
-    require_once 'header.php';
 }
 
 try {
@@ -30,7 +19,7 @@ try {
     // Get PDO connection
     $pdo = getConnection();
     
-    // Update query to include primary image from ContentImages
+    // Update query to include primary image from ContentImages and check for IsDeleted
     $query = "
         SELECT r.*, u.FirstName, u.LastName,
                COALESCE(ci.ImageURL, r.ImageURL) as PrimaryImage
@@ -40,6 +29,7 @@ try {
             AND ci.ContentType = 'recipe' 
             AND ci.IsPrimary = 1
         WHERE r.RecipeID = :recipe_id
+        AND r.IsDeleted = 0
     ";
     
     $stmt = $pdo->prepare($query);
@@ -48,13 +38,10 @@ try {
     
     if (!$recipe) {
         error_log("No recipe found for ID: " . $_GET['id']);
-        header('Location: pages/recipes.php');
+        header('Location: recipes.php');
         exit;
     }
 
-    // For debugging - output before the HTML
-    echo "<!-- Debug: Recipe found -->";
-    
     // Update image handling to use PrimaryImage
     $primaryImage = $recipe['PrimaryImage'] ?? 'https://via.placeholder.com/800x600';
 
@@ -89,6 +76,20 @@ try {
         }
         $repliesByParent[$parentId][] = $reply;
     }
+
+    // Now handle session checks and header/footer
+    if (isset($_GET['screenshot'])) {
+        // Only output the main content for screenshots
+        $isScreenshot = true;
+        // Don't include header/footer for screenshots
+        ob_start();
+    } else {
+        $isScreenshot = false;
+        require_once 'header.php';
+    }
+
+    // Move the debug output after header checks
+    echo "<!-- Debug: Recipe found -->";
     ?>
 
     <?php if ($recipe): ?>
@@ -279,6 +280,25 @@ try {
                                         </form>
                                     </div>
                                 </div>
+
+                                <!-- Replies -->
+                                <?php if (isset($repliesByParent[$comment['CommentID']])): ?>
+                                    <div class="ml-8 mt-4 space-y-4">
+                                        <?php foreach ($repliesByParent[$comment['CommentID']] as $reply): ?>
+                                            <div class="bg-white p-3 rounded-lg border border-gray-100">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <div class="font-medium text-gray-900">
+                                                        <?= htmlspecialchars($reply['FirstName'] . ' ' . $reply['LastName']) ?>
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        <?= date('M j, Y', strtotime($reply['CreatedAt'])) ?>
+                                                    </div>
+                                                </div>
+                                                <p class="text-gray-700"><?= htmlspecialchars($reply['Content']) ?></p>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -297,22 +317,27 @@ try {
                 },
                 body: `recipe_id=${recipeId}`
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = 'pages/recipes.php';
-                } else {
-                    alert('Error deleting recipe: ' + (data.error || 'Unknown error'));
+            .then(async response => {
+                const text = await response.text(); // Get response as text first
+                try {
+                    const data = JSON.parse(text); // Try to parse as JSON
+                    if (data.success) {
+                        window.location.href = 'recipes.php';
+                    } else {
+                        alert('Error deleting recipe: ' + (data.errors ? data.errors.join(', ') : 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Error parsing response:', error);
+                    alert('Error deleting recipe. Please try again.');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error deleting recipe:', error);
                 alert('Error deleting recipe. Please try again.');
             });
         }
     }
 
-    // Add these functions to your existing script
     function showReplyForm(commentId) {
         document.getElementById(`reply-form-${commentId}`).classList.remove('hidden');
     }
@@ -321,121 +346,47 @@ try {
         document.getElementById(`reply-form-${commentId}`).classList.add('hidden');
     }
 
-    // Update the comment form submission handling
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle main comment form
-        document.getElementById('comment-form')?.addEventListener('submit', submitComment);
-        
-        // Handle reply forms
-        document.querySelectorAll('.reply-form').forEach(form => {
-            form.addEventListener('submit', submitReply);
-        });
-    });
-
-    async function submitComment(e) {
+    document.getElementById('comment-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
-        
         try {
-            const response = await fetch('submit_comment.php', {
+            const response = await fetch('post_comment.php', {
                 method: 'POST',
                 body: formData
             });
             const data = await response.json();
-            
             if (data.success) {
-                // Add new comment to the list
-                addCommentToList(data.comment);
-                this.reset();
+                location.reload();
             } else {
-                alert('Error posting comment: ' + data.message);
+                alert('Error posting comment: ' + (data.errors ? data.errors.join(', ') : 'Unknown error'));
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error posting comment:', error);
             alert('Error posting comment. Please try again.');
         }
-    }
+    });
 
-    async function submitReply(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        formData.append('recipe_id', document.querySelector('[name="recipe_id"]').value);
-        
-        try {
-            const response = await fetch('submit_comment.php', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            
-            if (data.success) {
-                // Redirect to the parent comment's page
-                window.location.href = `comment.php?id=${formData.get('parent_comment_id')}`;
-            } else {
-                alert('Error posting reply: ' + data.message);
+    document.querySelectorAll('.reply-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            try {
+                const response = await fetch('post_reply.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error posting reply: ' + (data.errors ? data.errors.join(', ') : 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error posting reply:', error);
+                alert('Error posting reply. Please try again.');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error posting reply. Please try again.');
-        }
-    }
-
-    function addCommentToList(comment) {
-        const commentsList = document.getElementById('comments-list');
-        const commentHtml = `
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="font-medium text-gray-900">
-                        ${comment.author}
-                    </div>
-                    <div class="text-sm text-gray-500">
-                        ${comment.created_at}
-                    </div>
-                </div>
-                <p class="text-gray-700 mb-2">${comment.content}</p>
-                <button onclick="showReplyForm(${comment.id})" 
-                        class="text-sm text-primary-600 hover:text-primary-700">
-                    Reply
-                </button>
-                <div id="reply-form-${comment.id}" class="hidden mt-4">
-                    <!-- Reply form HTML -->
-                </div>
-            </div>
-        `;
-        commentsList.insertBefore(
-            createElementFromHTML(commentHtml), 
-            commentsList.firstChild
-        );
-    }
-
-    function addReplyToComment(reply) {
-        const parentComment = document.querySelector(`#reply-form-${reply.parent_comment_id}`).closest('.bg-gray-50');
-        let repliesContainer = parentComment.querySelector('.replies');
-        
-        if (!repliesContainer) {
-            repliesContainer = document.createElement('div');
-            repliesContainer.className = 'mt-4 ml-6 space-y-3 replies';
-            parentComment.appendChild(repliesContainer);
-        }
-        
-        const replyHtml = `
-            <div class="bg-white p-3 rounded-lg border border-gray-100">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="font-medium text-gray-900">
-                        ${reply.author}
-                    </div>
-                    <div class="text-sm text-gray-500">
-                        ${reply.created_at}
-                    </div>
-                </div>
-                <p class="text-gray-700">${reply.content}</p>
-            </div>
-        `;
-        repliesContainer.insertBefore(
-            createElementFromHTML(replyHtml), 
-            repliesContainer.firstChild
-        );
-    }
+        });
+    });
 
     function createElementFromHTML(htmlString) {
         const div = document.createElement('div');
@@ -455,7 +406,7 @@ try {
         echo "<strong>Debug Error:</strong> " . htmlspecialchars($e->getMessage());
         echo "</div></div>";
     } else {
-        header('Location: pages/recipes.php');
+        header('Location: recipes.php');
         exit;
     }
 }
@@ -467,4 +418,4 @@ if ($isScreenshot) {
 } else {
     require_once 'footer.php';
 }
-?> 
+?>

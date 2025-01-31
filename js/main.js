@@ -73,7 +73,8 @@ $(document).ready(function() {
         login: ensureModalInitialization('login-modal'),
         register: ensureModalInitialization('register-modal'),
         signup: ensureModalInitialization('signup-popup'),
-        cookieSettings: ensureModalInitialization('cookie-settings-modal')
+        cookieSettings: ensureModalInitialization('cookie-settings-modal'),
+        'forgot-password-modal': ensureModalInitialization('forgot-password-modal')
     };
 
     // Make modals available globally if needed
@@ -133,6 +134,15 @@ $(document).ready(function() {
         const registerModal = document.getElementById('register-modal');
         if (registerModal) {
             modals.register.show();
+        }
+    });
+
+    // Handle forgot password link
+    $('#forgot-password-link').click(function(e) {
+        e.preventDefault();
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        if (forgotPasswordModal) {
+            modals['forgot-password-modal'].show();
         }
     });
 
@@ -323,6 +333,26 @@ $(document).ready(function() {
             },
             error: function() {
                 $('#login-message').text('An error occurred. Please try again.');
+            }
+        });
+    });
+
+    // Handle forgot password form submission
+    $('#forgot-password-form').submit(function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: 'auth.php',
+            method: 'POST',
+            data: {
+                action: 'reset-request',
+                email: $('#reset-email').val()
+            },
+            success: function(response) {
+                $('#forgot-password-message').text(response.message);
+            },
+            error: function() {
+                $('#forgot-password-message').text('An error occurred. Please try again.');
             }
         });
     });
