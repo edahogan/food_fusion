@@ -12,17 +12,22 @@ if (!$token) {
         $conn = getConnection();
         // Debug: Log the token received
         error_log("Token received: " . $token);
-        $stmt = $conn->prepare("SELECT UserID, ResetTokenExpiry FROM Users WHERE ResetToken = ?");
-        $stmt->execute([$token]);
-        $user = $stmt->fetch();
         
-        // Debug: Log the user data fetched
-        error_log("User data fetched: " . print_r($user, true));
-
-        if (!$user) {
+        if (empty($token)) {
             $error = "Invalid reset token.";
-        } elseif (strtotime($user['ResetTokenExpiry']) < time()) {
-            $error = "Reset token has expired.";
+        } else {
+            $stmt = $conn->prepare("SELECT UserID, ResetTokenExpiry FROM Users WHERE ResetToken = ?");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch();
+            
+            // Debug: Log the user data fetched
+            error_log("User data fetched: " . print_r($user, true));
+
+            if (!$user) {
+                $error = "Invalid reset token.";
+            } elseif (strtotime($user['ResetTokenExpiry']) < time()) {
+                $error = "Reset token has expired.";
+            }
         }
     } catch (PDOException $e) {
         error_log("Database error: " . $e->getMessage());

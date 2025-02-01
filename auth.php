@@ -135,6 +135,10 @@ function requestPasswordReset($email) {
 
         $stmt = $conn->prepare("UPDATE Users SET ResetToken = ?, ResetTokenExpiry = ? WHERE UserID = ?");
         $stmt->execute([$token, $expiry, $user['UserID']]);
+        
+        // Debug: Log the token and expiry being stored
+        error_log("Token stored: " . $token);
+        error_log("Expiry stored: " . $expiry);
 
         $resetLink = "http://localhost/food_fusion/reset_password.php?token=" . $token; // Replace with your actual domain
         
