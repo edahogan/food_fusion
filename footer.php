@@ -96,22 +96,28 @@
                 cookieNotice.style.display = 'none';
             }
 
-            // if (getCookie('cookie_consent') === 'true') {
-            //     hideCookieNotice();
-            // } else {
+            const cookieConsent = {
+                functional: localStorage.getItem('cookieConsent_functional') === 'true',
+                analytics: localStorage.getItem('cookieConsent_analytics') === 'true',
+                marketing: localStorage.getItem('cookieConsent_marketing') === 'true'
+            };
+
+            if (localStorage.getItem('cookie-notice-interact') === '' || cookieConsent.functional || cookieConsent.analytics || cookieConsent.marketing) {
+                hideCookieNotice();
+            } else {
                 cookieNotice.style.display = 'block';
-            // }
+            }
 
             acceptButton.addEventListener('click', function() {
                 setCookie('cookie_consent', 'true', 365);
                 hideCookieNotice();
-                localStorage.setItem('cookie-notice-interact', '');
+                localStorage.setItem('cookie-notice-interact', 'true');
             });
 
             rejectButton.addEventListener('click', function() {
                 setCookie('cookie_consent', 'true', 365);
                 hideCookieNotice();
-                localStorage.setItem('cookie-notice-interact', '');
+                localStorage.setItem('cookie-notice-interact', 'true');
             });
 
             closeButton.addEventListener('click', function() {
