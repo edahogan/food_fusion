@@ -3,6 +3,27 @@ $page = 'contact';
 require_once 'db_connection.php';
 require_once 'header.php';
 
+// Get PDO connection
+$pdo = getConnection();
+
+// Check if user is logged in
+$user_name = '';
+$user_email = '';
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $stmt = $pdo->prepare("SELECT FirstName, LastName, Email FROM Users WHERE UserID = ?");
+    $stmt->execute([$user_id]);
+    if ($user = $stmt->fetch()) {
+        $user_name = htmlspecialchars($user['FirstName'] . ' ' . $user['LastName']);
+        $user_email = htmlspecialchars($user['Email']);
+    }
+}
+?>
+<head>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<?php
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
@@ -39,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         id="name" 
                         name="name" 
                         required 
+                        value="<?php echo $user_name; ?>"
                         class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
                                shadow-sm hover:shadow-md transition-all duration-200
                                bg-white/50 backdrop-blur-sm"
@@ -54,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         id="email" 
                         name="email" 
                         required 
+                        value="<?php echo $user_email; ?>"
                         class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
                                shadow-sm hover:shadow-md transition-all duration-200
                                bg-white/50 backdrop-blur-sm"
@@ -189,7 +212,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                transform hover:scale-105 active:scale-95 transition-all duration-200
                                shadow-[0_4px_14px_0_rgba(192,38,211,0.39)] hover:shadow-[0_6px_20px_0_rgba(192,38,211,0.39)]"
                     >
-                        Send Message
+                        <span id="submit-button-text">Send Message</span>
+                        <svg id="loading-icon" class="animate-spin h-5 w-5 text-white ml-2 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </button>
                 </div>
             </form>
@@ -238,6 +265,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const subjectSelect = document.getElementById('subject');
     const recipeRequestFields = document.getElementById('recipe-request-fields');
     const feedbackFields = document.getElementById('feedback-fields');
+    const submitButton = document.querySelector('button[type="submit"]');
+    const submitButtonText = document.getElementById('submit-button-text');
+    const loadingIcon = document.getElementById('loading-icon');
 
     subjectSelect.addEventListener('change', function() {
         // Hide all conditional fields first
@@ -250,6 +280,40 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (this.value === 'feedback') {
             feedbackFields.classList.remove('hidden');
         }
+    });
+    
+    // Handle form submission
+    const contactForm = document.querySelector('form');
+    contactForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Show loading indicator
+        submitButtonText.textContent = 'Sending...';
+        loadingIcon.classList.remove('hidden');
+        
+        const formData = new FormData(contactForm);
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+        
+        // Send email using EmailJS
+        emailjs.init('rjcUi1kJkTIIxjBLR'); // Replace with your EmailJS user ID
+        const templateParams = {
+            json: JSON.stringify(jsonData, null, 2)
+        };
+        emailjs.send('sense5', 'contact_form', templateParams) // Replace with your service ID and template ID
+            .then(function(response) {
+                // Handle success (e.g., redirect to thank you page)
+                console.log('Email sent successfully', response);
+                window.location.href = 'thank_you.php';
+            }, function(error) {
+                // Handle error (e.g., show an error message)
+                console.error('Email sending failed', error);
+                submitButtonText.textContent = 'Send Message';
+                loadingIcon.classList.add('hidden');
+                alert('Failed to send message. Please try again.');
+            });
     });
 });
 </script>
