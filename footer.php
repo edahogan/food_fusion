@@ -37,12 +37,87 @@
             </div>
         </div>
     </footer>
-    <div id="cookie-notice" style="display: none;" class="fixed bottom-0 left-0 w-full bg-white border-t border-neutral-200 shadow-lg p-4">
+    <div id="cookie-notice" style="display: none;" class="fixed bottom-0 left-0 w-full bg-white border-t border-neutral-200 shadow-lg p-4" data-dismissed="false">
         <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-neutral-600">This website uses cookies to ensure you get the best experience on our website.</p>
-            <button id="accept-cookies" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors whitespace-nowrap">Accept Cookies</button>
+            <div class="flex gap-2">
+                <button id="reject-cookies"
+                        class="px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors">
+                    Reject All
+                </button>
+                <button id="choose-cookies"
+                        data-modal-target="cookie-settings-modal"
+                        data-modal-toggle="cookie-settings-modal"
+                        class="px-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-100 rounded-lg transition-colors">
+                    Choose Cookies
+                </button>
+                <button id="accept-cookies"
+                        class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                    Accept All
+                </button>
+                <button id="close-cookie-notice" class="text-neutral-400 hover:text-neutral-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieNotice = document.getElementById('cookie-notice');
+            const acceptButton = document.getElementById('accept-cookies');
+            const rejectButton = document.getElementById('reject-cookies');
+            const chooseButton = document.getElementById('choose-cookies');
+            const closeButton = document.getElementById('close-cookie-notice');
+
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            function hideCookieNotice() {
+                cookieNotice.style.display = 'none';
+            }
+
+            if (getCookie('cookie_consent') === 'true') {
+                hideCookieNotice();
+            } else {
+                cookieNotice.style.display = 'block';
+            }
+
+            acceptButton.addEventListener('click', function() {
+                setCookie('cookie_consent', 'true', 365);
+                hideCookieNotice();
+            });
+
+            rejectButton.addEventListener('click', function() {
+                setCookie('cookie_consent', 'true', 365);
+                hideCookieNotice();
+            });
+
+            closeButton.addEventListener('click', function() {
+                cookieNotice.dataset.dismissed = 'true';
+                cookieNotice.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 </html>
 <?php endif; ?>
