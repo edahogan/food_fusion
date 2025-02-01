@@ -1,38 +1,31 @@
 <?php
 // session_start(); // Removed as it's already called in index.php
 require_once 'db_connection.php';
+// Include PHPMailer
+// require_once __DIR__ . '/PHPMailer/src/Exception.php';
+// require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
+// require_once __DIR__ . '/PHPMailer/src/SMTP.php';
+
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 
 function registerUser($firstName, $lastName, $email, $password) {
     try {
         $conn = getConnection();
-        
-        // Check if email already exists
-        $stmt = $conn->prepare("SELECT UserID FROM Users WHERE Email = ?");
-        $stmt->execute([$email]);
-        if ($stmt->fetch()) {
-            return "An account with this email already exists";
-        }
-        
-        // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
-        // Insert new user
         $stmt = $conn->prepare("INSERT INTO Users (FirstName, LastName, Email, Password) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$firstName, $lastName, $email, $hashedPassword])) {
-            return "success";
-        }
-        return "Registration failed";
+        $stmt->execute([$firstName, $lastName, $email, $hashedPassword]);
+        return "success";
     } catch (PDOException $e) {
         error_log("Registration error: " . $e->getMessage());
-        return "An error occurred during registration";
+        return "An error occurred. Please try again.";
     }
 }
 
 function loginUser($email, $password) {
     try {
         $conn = getConnection();
-        
-        $stmt = $conn->prepare("SELECT UserID, Password, FailedAttempts, LockoutTime, FirstName, LastName FROM Users WHERE Email = ?");
+        $stmt = $conn->prepare("SELECT UserID, FirstName, LastName, Password, FailedAttempts, LockoutTime FROM Users WHERE Email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         
@@ -60,32 +53,33 @@ function loginUser($email, $password) {
                 $lockoutTime = strtotime($user['LockoutTime']);
                 if ($lockoutTime > time()) {
                     $remainingTime = ceil(($lockoutTime - time()) / 60);
-                    return "Account is locked. Please try again in {$remainingTime} minute(s).";
+                    return "Account locked. Please try again in {$remainingTime} minutes.";
                 } else {
-                    // Reset lockout if time has expired
-                    $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = 0, LockoutTime = NULL WHERE UserID = ?");
+                    // Reset failed attempts and lockout time if lockout has expired
+                    $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = 1, LockoutTime = NULL WHERE UserID = ?");
                     $stmt->execute([$user['UserID']]);
                 }
             }
             
-            // Increment failed attempts
+            // Increment failed login attempts
             $failedAttempts = $user['FailedAttempts'] + 1;
-            $lockoutTime = ($failedAttempts >= 3) ? date('Y-m-d H:i:s', strtotime('+15 minutes')) : null;
-            
-            $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ?, LockoutTime = ? WHERE UserID = ?");
-            $stmt->execute([$failedAttempts, $lockoutTime, $user['UserID']]);
-            
-            if ($failedAttempts >= 3) {
-                return "Account locked for 15 minutes due to multiple failed attempts.";
+            $lockoutTime = null;
+            if ($failedAttempts >= 5) {
+                $lockoutTime = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+                $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ?, LockoutTime = ? WHERE UserID = ?");
+                $stmt->execute([$failedAttempts, $lockoutTime, $user['UserID']]);
+                return "Too many failed login attempts. Account locked for 15 minutes.";
             } else {
-                $remainingAttempts = 3 - $failedAttempts;
-                return "Invalid password. {$remainingAttempts} attempt(s) remaining before account lockout.";
+                $stmt = $conn->prepare("UPDATE Users SET FailedAttempts = ? WHERE UserID = ?");
+                $stmt->execute([$failedAttempts, $user['UserID']]);
+                return "Invalid email or password.";
             }
         }
+        
         return "Invalid email or password.";
     } catch (PDOException $e) {
         error_log("Login error: " . $e->getMessage());
-        return "An error occurred during login. Please try again.";
+        return "An error occurred. Please try again.";
     }
 }
 
@@ -95,11 +89,35 @@ function logoutUser() {
     session_destroy();
 }
 
-function sendEmail($to, $subject, $message) {
-    $headers = "From: noreply@foodfusion.com\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    return mail($to, $subject, $message, $headers);
-}
+// function sendEmail($to, $subject, $message) {
+//     $mail = new PHPMailer(true);
+//     try {
+//         //Server settings
+//         $mail->SMTPDebug = 0; // Enable verbose debug output (set to 2 for debugging)
+//         $mail->isSMTP();                                            // Send using SMTP
+//         $mail->Host       = 'smtp.mandrillapp.com';                    // Set the SMTP server to send through
+//         // $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+//         $mail->Username   = 'AngelWings Communications';                     // SMTP username
+//         $mail->Password   = 'md-O6tCK0kxxDJIiNa6yFUrGg';                               // SMTP password
+//         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+//         $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+//         //Recipients
+//         $mail->setFrom('thecreatorgetswhathewants@gmail.com', 'FoodFusion');
+//         $mail->addAddress($to);     // Add a recipient
+
+//         // Content
+//         $mail->isHTML(true);                                  // Set email format to HTML
+//         $mail->Subject = $subject;
+//         $mail->Body    = $message;
+
+//         $mail->send();
+//         return true;
+//     } catch (Exception $e) {
+//         error_log("Email sending failed: " . $mail->ErrorInfo);
+//         return false;
+//     }
+// }
 
 function requestPasswordReset($email) {
     try {
@@ -119,22 +137,20 @@ function requestPasswordReset($email) {
         $stmt->execute([$token, $expiry, $user['UserID']]);
 
         $resetLink = "http://localhost/food_fusion/reset_password.php?token=" . $token; // Replace with your actual domain
-        $message = "
-            <p>Hello {$user['FirstName']},</p>
-            <p>You have requested to reset your password. Please click the link below to reset it:</p>
-            <p><a href='{$resetLink}'>Reset Password</a></p>
-            <p>This link will expire in 1 hour.</p>
-            <p>If you did not request a password reset, please ignore this email.</p>
-        ";
         
-        if (sendEmail($email, "FoodFusion Password Reset", $message)) {
-            return "If an account with this email exists, a reset link has been sent.";
-        } else {
-            return "Failed to send reset email. Please try again.";
-        }
+        return [
+            'status' => 'success',
+            'message' => "If an account with this email exists, a reset link has been sent.",
+            'user_name' => $user['FirstName'],
+            'reset_link' => $resetLink,
+            'token' => $token // Include the token in the response
+        ];
     } catch (PDOException $e) {
         error_log("Password reset request error: " . $e->getMessage());
-        return "An error occurred. Please try again.";
+        return [
+            'status' => 'error',
+            'message' => "An error occurred. Please try again."
+        ];
     }
 }
 
@@ -182,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 exit;
             }
             $result = requestPasswordReset($email);
-            echo json_encode(['status' => ($result === 'success' ? 'success' : 'error'), 'message' => $result]);
+            echo json_encode($result);
             exit;
         }
     } catch (Exception $e) {

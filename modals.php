@@ -237,12 +237,86 @@
                         <button type="submit" 
                                 name="reset-request" 
                                 class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
-                            Send Reset Link
+                            <span id="reset-button-text">Send Reset Link</span>
+                            <svg id="reset-loading-icon" class="hidden w-5 h-5 ml-3 -mr-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forgotPasswordForm = document.getElementById('forgot-password-form');
+            const forgotPasswordMessage = document.getElementById('forgot-password-message');
+            const resetButtonText = document.getElementById('reset-button-text');
+            const resetLoadingIcon = document.getElementById('reset-loading-icon');
 
+            forgotPasswordForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                resetButtonText.textContent = 'Sending...';
+                resetLoadingIcon.classList.remove('hidden');
+                forgotPasswordMessage.textContent = '';
+
+                const formData = new FormData(forgotPasswordForm);
+                formData.append('action', 'reset-request');
+
+                fetch('auth.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resetButtonText.textContent = 'Send Reset Link';
+                    resetLoadingIcon.classList.add('hidden');
+                    if (data.status === 'success') {
+                        // EmailJS integration
+                        emailjs.init('rjcUi1kJkTIIxjBLR'); // Replace with your EmailJS user ID
+                        const templateParams = {
+                            user_name: data.user_name,
+                            reset_link: data.reset_link,
+                            message: `
+                                <p>Hello ${data.user_name},</p>
+                                <p>You have requested to reset your password. Please click the button below to reset it:</p>
+                                <p style='text-align: center;'>
+                                    <a href='${data.reset_link}' style='display: inline-block; padding: 12px 24px; background-color: #c026d3; color: #ffffff; text-decoration: none; border-radius: 6px; transition: background-color 0.3s ease; text-align: center;'>Reset Password</a>
+                                </p>
+                                <p>This link will expire in 1 hour.</p>
+                                <p>If you did not request a password reset, please ignore this email.</p>
+                                <p>Best regards,<br>The FoodFusion Team</p>
+                            `
+                        };
+                        emailjs.send('sense5', 'password_reset', templateParams) // Replace with your service ID and template ID
+                            .then(function(response) {
+                                forgotPasswordMessage.textContent = 'If an account with this email exists, a reset link has been sent.';
+                                forgotPasswordMessage.classList.remove('text-red-600');
+                                forgotPasswordMessage.classList.add('text-green-600');
+                                console.log('Email sent successfully', response);
+                            }, function(error) {
+                                forgotPasswordMessage.textContent = 'Failed to send reset email. Please try again.';
+                                forgotPasswordMessage.classList.remove('text-green-600');
+                                forgotPasswordMessage.classList.add('text-red-600');
+                                console.error('Email sending failed', error);
+                            });
+                    } else {
+                        forgotPasswordMessage.textContent = data.message;
+                        forgotPasswordMessage.classList.remove('text-green-600');
+                        forgotPasswordMessage.classList.add('text-red-600');
+                    }
+                })
+                .catch(error => {
+                    resetButtonText.textContent = 'Send Reset Link';
+                    resetLoadingIcon.classList.add('hidden');
+                    forgotPasswordMessage.textContent = 'An error occurred. Please try again.';
+                    forgotPasswordMessage.classList.remove('text-green-600');
+                    forgotPasswordMessage.classList.add('text-red-600');
+                    console.error('Fetch error:', error);
+                });
+            });
+        });
+    </script>
 <?php endif; ?> 

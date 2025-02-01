@@ -10,9 +10,14 @@ if (!$token) {
 } else {
     try {
         $conn = getConnection();
+        // Debug: Log the token received
+        error_log("Token received: " . $token);
         $stmt = $conn->prepare("SELECT UserID, ResetTokenExpiry FROM Users WHERE ResetToken = ?");
         $stmt->execute([$token]);
         $user = $stmt->fetch();
+        
+        // Debug: Log the user data fetched
+        error_log("User data fetched: " . print_r($user, true));
 
         if (!$user) {
             $error = "Invalid reset token.";
