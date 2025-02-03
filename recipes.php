@@ -178,6 +178,14 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Recipe cards will be loaded here -->
 </div>
 
+<!-- Pagination container -->
+<div id="pagination-container" class="flex justify-center mt-8">
+    <input type="hidden" id="current-page" value="1">
+    <div id="pagination-buttons" class="inline-flex space-x-2">
+        <!-- Pagination buttons will be added here -->
+    </div>
+</div>
+
 <?php if ($userIdFilter): ?>
 <script>
     const currentUserFilter = <?php echo $userIdFilter; ?>;
@@ -206,14 +214,19 @@ function updateRecipes() {
         queryParams.push(`u=${currentUserFilter}`);
     }
 
+    // Get current page
+    const currentPage = document.getElementById('current-page').value;
+    queryParams.push(`page=${currentPage}`);
+
     const queryString = queryParams.join('&');
 
     // Fetch filtered recipes
     fetch(`fetch_recipes.php${queryString ? '?' + queryString : ''}`)
-        .then(response => response.text())
-        .then(html => {
-            recipeList.innerHTML = html;
+        .then(response => response.json())
+        .then(data => {
+            recipeList.innerHTML = data.html;
             recipeList.classList.remove('opacity-50');
+            updatePaginationControls(parseInt(currentPage), data.totalPages);
         })
         .catch(error => {
             console.error('Error fetching recipes:', error);
@@ -270,6 +283,52 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load all recipes by default
     updateRecipes();
 });
+
+// Function to update pagination controls
+function updatePaginationControls(currentPage, totalPages) {
+    const paginationButtons = document.getElementById('pagination-buttons');
+    paginationButtons.innerHTML = ''; // Clear existing buttons
+
+    // Create "Previous" button
+    if (currentPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.classList.add('px-3', 'py-1', 'border', 'border-neutral-300', 'rounded-md', 'hover:bg-neutral-100');
+        prevButton.addEventListener('click', () => {
+            document.getElementById('current-page').value = currentPage - 1;
+            updateRecipes();
+        });
+        paginationButtons.appendChild(prevButton);
+    }
+
+    // Create page number buttons
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add('px-3', 'py-1', 'border', 'border-neutral-300', 'rounded-md', 'hover:bg-neutral-100');
+        if (i === currentPage) {
+            pageButton.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-300');
+        } else {
+            pageButton.addEventListener('click', () => {
+                document.getElementById('current-page').value = i;
+                updateRecipes();
+            });
+        }
+        paginationButtons.appendChild(pageButton);
+    }
+
+    // Create "Next" button
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.classList.add('px-3', 'py-1', 'border', 'border-neutral-300', 'rounded-md', 'hover:bg-neutral-100');
+        nextButton.addEventListener('click', () => {
+            document.getElementById('current-page').value = currentPage + 1;
+            updateRecipes();
+        });
+        paginationButtons.appendChild(nextButton);
+    }
+}
 </script>
 
 <script src="assets/js/recipe-download.js"></script>

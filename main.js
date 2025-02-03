@@ -23,3 +23,43 @@ if (!$('body').hasClass('logged-in')) {
         }
     }
 } 
+
+// Recipe filters with smooth transitions
+$('#cuisine-type, #dietary-preference, #difficulty').change(function() {
+    updateRecipes();
+}); 
+
+// Function to update recipes
+function updateRecipes() {
+    const recipeList = document.getElementById('recipe-list');
+    recipeList.classList.add('opacity-50');
+
+    let queryParams = Object.entries(filters)
+        .filter(([_, value]) => value !== '')
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
+    
+    // Add user filter if it exists
+    if (typeof currentUserFilter !== 'undefined') {
+        queryParams.push(`u=${currentUserFilter}`);
+    }
+
+    // Get current page
+    const currentPage = document.getElementById('current-page').value;
+    queryParams.push(`page=${currentPage}`);
+
+    const queryString = queryParams.join('&');
+
+    // Fetch filtered recipes
+    fetch(`fetch_recipes.php${queryString ? '?' + queryString : ''}`)
+        .then(response => response.json())
+        .then(data => {
+            recipeList.innerHTML = data.html;
+            recipeList.classList.remove('opacity-50');
+            updatePaginationControls(parseInt(currentPage), data.totalPages);
+        })
+        .catch(error => {
+            console.error('Error fetching recipes:', error);
+            recipeList.innerHTML = '';
+            recipeList.classList.remove('opacity-50');
+        });
+} 
