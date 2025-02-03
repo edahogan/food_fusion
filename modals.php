@@ -44,8 +44,8 @@
                             </li>
                         </ul>
                         <div class="space-y-4">
-                            <button type="button" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors" data-modal-target="register-modal" data-modal-toggle="register-modal" data-modal-hide="signup-popup">Sign Up Now</button>
-                            <p class="text-sm text-neutral-500">Already have an account? <button type="button" class="text-primary-600 hover:underline font-medium" data-modal-target="login-modal" data-modal-toggle="login-modal" data-modal-hide="signup-popup">Sign in</button></p>
+                            <button type="button" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors" data-modal-target="register-modal" data-modal-toggle="register-modal" data-modal-hide="signup-popup" onclick="localStorage.setItem('signup-popup-interact', '')">Sign Up Now</button>
+                            <button type="button" class="w-full text-neutral-500 hover:text-neutral-700 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors" data-modal-hide="signup-popup" onclick="localStorage.setItem('signup-popup-interact', '')">Maybe Later</button>
                         </div>
                     </div>
                 </div>

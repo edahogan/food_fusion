@@ -102,7 +102,7 @@
                 marketing: localStorage.getItem('cookieConsent_marketing') === 'true'
             };
 
-            if (localStorage.getItem('cookie-notice-interact') === '' || cookieConsent.functional || cookieConsent.analytics || cookieConsent.marketing) {
+            if (localStorage.getItem('cookie-preference-interact') === '') {
                 hideCookieNotice();
             } else {
                 cookieNotice.style.display = 'block';
@@ -111,13 +111,13 @@
             acceptButton.addEventListener('click', function() {
                 setCookie('cookie_consent', 'true', 365);
                 hideCookieNotice();
-                localStorage.setItem('cookie-notice-interact', 'true');
+                localStorage.setItem('cookie-preference-interact', 'true');
             });
 
             rejectButton.addEventListener('click', function() {
                 setCookie('cookie_consent', 'true', 365);
                 hideCookieNotice();
-                localStorage.setItem('cookie-notice-interact', 'true');
+                localStorage.setItem('cookie-preference-interact', 'true');
             });
 
             closeButton.addEventListener('click', function() {
